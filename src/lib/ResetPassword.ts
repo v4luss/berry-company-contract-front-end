@@ -1,9 +1,18 @@
-export async function sendCode() {
+export async function sendCode(value: string) {
 	try {
-		console.log('send verification code');
+		console.log('send verification code: ' + value);
 		return true;
 	} catch (e) {
 		console.log('Erro ao enviar código: ' + e);
+		return false;
+	}
+}
+export async function verifyCode(value: string) {
+	try {
+		console.log('veify code: ' + value);
+		return true;
+	} catch (e) {
+		console.log('Erro ao verificar código: ' + e);
 		return false;
 	}
 }

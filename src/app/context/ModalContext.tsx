@@ -101,19 +101,7 @@ function Modal({ content, data }: ModalProps) {
 				alignItems: 'center',
 			}}
 		>
-			<div
-				style={{
-					backgroundColor: 'white',
-					padding: '20px',
-					borderRadius: '8px',
-					width: '300px',
-					textAlign: 'center',
-				}}
-			>
-				{content(data)}{' '}
-				{/* Call the content function with data */}
-				<button onClick={closeModal}>Close</button>
-			</div>
+			<div>{content(data)} </div>
 		</div>
 	);
 }

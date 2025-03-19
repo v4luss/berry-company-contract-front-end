@@ -25,7 +25,9 @@ export default function AuthPage({ children }: { children: React.ReactNode }) {
 					/>{' '}
 				</svg>
 			</div>
-			<div>{children}</div>
+			<div className="flex flex-col justify-center items-center w-xl gap-y-12">
+				{children}
+			</div>
 		</div>
 	);
 }
