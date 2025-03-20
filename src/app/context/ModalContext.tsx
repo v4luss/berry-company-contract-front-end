@@ -1,4 +1,7 @@
 'use client';
+import { AddCategoryModal } from '@/components/modals/AddCategoryModal';
+import { AddUserModal } from '@/components/modals/AddUserModal';
+import { DeleteConfirmUserModal } from '@/components/modals/DeleteConfirmUserModal';
 import { ResetPasswordCodeModal } from '@/components/modals/ResetPasswordCodeModal.tsx';
 import { createContext, useState, ReactNode, useContext } from 'react';
 
@@ -33,6 +36,17 @@ const MODAL_CONTENT: Record<string, (data?: Record<string, any>) => ReactNode> =
 	{
 		resetPasswordCodeModal: (data) => (
 			<ResetPasswordCodeModal
+				data={data as Record<string, any>}
+			/>
+		),
+		addCategoriesModal: (data) => (
+			<AddCategoryModal data={data as Record<string, any>} />
+		),
+		addUserModal: (data) => (
+			<AddUserModal data={data as Record<string, any>} />
+		),
+		deleteConfirmUserModal: (data) => (
+			<DeleteConfirmUserModal
 				data={data as Record<string, any>}
 			/>
 		),

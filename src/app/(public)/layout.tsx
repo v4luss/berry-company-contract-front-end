@@ -11,10 +11,10 @@ export default async function PublicLayout({
 	const session = cookieStore.get('session');
 	if (!session) redirect('/login');
 	return (
-		<div>
+		<div className="h-full">
 			<HomeHeader />
-			<div>
-				<div className="pt-12">
+			<div className="flex h-full">
+				<div className="pt-12 h-full">
 					<PublicNavBar
 						options={[
 							'contracts',
@@ -22,7 +22,9 @@ export default async function PublicLayout({
 						]}
 					/>
 				</div>
-				<div>{children}</div>
+				<div className="w-full h-full pt-16 px-36">
+					{children}
+				</div>
 			</div>
 		</div>
 	);

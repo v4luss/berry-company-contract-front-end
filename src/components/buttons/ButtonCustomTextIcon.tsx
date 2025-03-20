@@ -18,7 +18,7 @@ const ButtonIconText = ({
 	return (
 		<Button
 			onClick={onClick}
-			className={` p-1 border-primary border-1 bg-transparent size-fit text-black ${className}`}
+			className={` p-1 border-primary border-1 bg-transparent size-fit text-black hover:text-white ${className}`}
 		>
 			{reverse ? (
 				<span className="flex items-center">

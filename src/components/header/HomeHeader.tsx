@@ -5,7 +5,10 @@ import { Plus, SeparatorVertical } from 'lucide-react';
 import Image from 'next/image';
 import { ButtonIcon } from '../buttons/ButtonCustomIcon';
 import { ButtonIconText } from '../buttons/ButtonCustomTextIcon';
+import { useContext } from 'react';
+import { ModalContext } from '@/app/context/ModalContext';
 const HomeHeader = () => {
+	const { openModal } = useContext(ModalContext);
 	return (
 		<header className="py-4 px-8 flex items-center justify-between">
 			<div className="flex items-center gap-4">
@@ -43,7 +46,9 @@ const HomeHeader = () => {
 				<ButtonIconText
 					Icon={<Plus />}
 					className="h-10 px-4 rounded-sm"
-					onClick={() => {}}
+					onClick={() =>
+						openModal('addUserModal')
+					}
 					text="Nome do Usuario"
 					reverse
 				/>

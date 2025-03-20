@@ -1,15 +1,16 @@
 'use server';
 
+import { api, apiPublic } from '@/services/api';
 import { cookies } from 'next/headers';
 
 export async function login() {
 	try {
 		console.log('login');
-		const cookieStore = await cookies();
-		const session = cookieStore.set({
-			name: 'session',
-			value: JSON.stringify({ user: 'bundinha' }),
-		});
+		// const response = await apiPublic.post('/login', {});
+		localStorage.setItem(
+			'token',
+			JSON.stringify({ user: 'bundinha' }),
+		);
 		return true;
 	} catch (e) {
 		console.log('Erro ao fazer login: ' + e);
@@ -19,8 +20,7 @@ export async function login() {
 export async function logout() {
 	try {
 		console.log('login');
-		const cookieStore = await cookies();
-		cookieStore.delete('session');
+		localStorage.removeItem('token');
 		return true;
 	} catch (e) {
 		console.log('Erro ao fazer logout: ' + e);
