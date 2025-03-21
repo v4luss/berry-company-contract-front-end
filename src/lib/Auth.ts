@@ -7,10 +7,7 @@ export async function login() {
 	try {
 		console.log('login');
 		// const response = await apiPublic.post('/login', {});
-		localStorage.setItem(
-			'token',
-			JSON.stringify({ user: 'bundinha' }),
-		);
+
 		return true;
 	} catch (e) {
 		console.log('Erro ao fazer login: ' + e);
