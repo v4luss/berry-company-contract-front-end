@@ -7,8 +7,8 @@ export default async function PublicLayout({
 }: {
 	children: React.ReactNode;
 }) {
-	const cookieStore = await cookies();
-	const session = cookieStore.get('session');
+	const cookieStore = localStorage.getItem('token');
+	const session = cookieStore;
 	if (!session) redirect('/login');
 	return (
 		<div className="h-full">

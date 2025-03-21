@@ -45,7 +45,7 @@ const InputCustom = ({
 					{...(placeholder
 						? { placeholder: placeholder }
 						: {})}
-					type="password"
+					type={clicked ? 'password' : 'text'}
 				/>
 				<svg
 					onClick={() => click(!clicked)}
