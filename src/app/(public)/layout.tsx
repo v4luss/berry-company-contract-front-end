@@ -1,3 +1,4 @@
+'use client';
 import { HomeHeader } from '@/components/header/HomeHeader';
 import { PublicNavBar } from '@/components/nav/PublicNavBar';
 import { cookies } from 'next/headers';
