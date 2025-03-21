@@ -1,16 +1,21 @@
 'use client';
 import { HomeHeader } from '@/components/header/HomeHeader';
 import { PublicNavBar } from '@/components/nav/PublicNavBar';
-import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
-export default async function PublicLayout({
+import { useEffect, useState } from 'react';
+export default function PublicLayout({
 	children,
 }: {
 	children: React.ReactNode;
 }) {
-	const cookieStore = localStorage.getItem('token');
-	const session = cookieStore;
-	if (!session) redirect('/login');
+	const [token, setToken] = useState<string | undefined>();
+
+	useEffect(() => {
+		const storedToken = localStorage.getItem('token');
+		setToken(storedToken as string);
+	}, []);
+
+	if (!token) redirect('/login');
 	return (
 		<div className="h-full">
 			<HomeHeader />
