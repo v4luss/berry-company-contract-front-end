@@ -4,7 +4,7 @@ import { ModalContext } from '@/app/context/ModalContext';
 import { ListItem } from '@/app/types/ListItemType';
 import { useContext } from 'react';
 import { ButtonIcon } from './buttons/ButtonCustomIcon';
-import { ChartArea, Trash } from 'lucide-react';
+import { ChartArea, Eye, Pencil, Trash } from 'lucide-react';
 
 type Props = {
 	item: ListItem;
@@ -12,12 +12,15 @@ type Props = {
 };
 const ListItemComponent = ({ item, refetch }: Props) => {
 	const { openModal } = useContext(ModalContext);
-	const { user, subItems, buttons } = item;
+	const { contract, user, subItems, buttons } = item;
 
 	return (
 		<div className="flex items-center w-full justify-between h-24">
 			<div className="flex flex-col justify-between items-start gap-y-6">
-				<p>{user.name}</p>
+				<p>
+					{(user?.name as string) ||
+						(contract?.name as string)}
+				</p>
 				<div className="flex gap-x-6">
 					{Object.entries(subItems).map(
 						([key, value]) => (
@@ -34,40 +37,135 @@ const ListItemComponent = ({ item, refetch }: Props) => {
 				</div>
 			</div>
 			<div className="flex items-center gap-x-4">
-				{buttons.map((b: any) => (
-					<ButtonIcon
-						Icon={
-							b.icon == 'Trash' ? (
-								<Trash />
-							) : (
-								<ChartArea />
-							)
-						}
-						className={`p-0 size-8 text-white ${
-							b.icon == 'Trash'
-								? 'bg-red-400 hover:bg-red-600 hover:text-black'
-								: 'bg-amber-300 hover:bg-amber-600 hover:text-gray-600'
-						} `}
-						onClick={() =>
-							b.icon == 'Trash'
-								? openModal(
-										'deleteConfirmUserModal',
-										{
-											id: user.id,
-											refetch: refetch,
-										},
-								  )
-								: openModal(
-										b.modalId,
-										{
-											id: user.id,
-											name: user.name,
-											refetch: refetch,
-										},
-								  )
-						}
-					/>
-				))}
+				{buttons.map(
+					(b: {
+						icon: string;
+						modalId: string;
+						color: string;
+						borderColor: string;
+					}) => {
+						if (b.color == 'y')
+							return (
+								<ButtonIcon
+									Icon={
+										b.icon ==
+										'Trash' ? (
+											<Trash />
+										) : b.icon ==
+										  'ChartArea' ? (
+											<ChartArea />
+										) : b.icon ==
+										  'Pencil' ? (
+											<Pencil />
+										) : (
+											<Eye />
+										)
+									}
+									className="p-0 size-8 text-white bg-y border-yb"
+									onClick={() =>
+										b.icon ==
+										'Trash'
+											? openModal(
+													'deleteConfirmUserModal',
+											  )
+											: openModal(
+													b.modalId,
+											  )
+									}
+								/>
+							);
+						if (b.color == 'r')
+							return (
+								<ButtonIcon
+									Icon={
+										b.icon ==
+										'Trash' ? (
+											<Trash />
+										) : b.icon ==
+										  'ChartArea' ? (
+											<ChartArea />
+										) : b.icon ==
+										  'Pencil' ? (
+											<Pencil />
+										) : (
+											<Eye />
+										)
+									}
+									className="p-0 size-8 text-white bg-r border-rb"
+									onClick={() =>
+										b.icon ==
+										'Trash'
+											? openModal(
+													'deleteConfirmUserModal',
+											  )
+											: openModal(
+													b.modalId,
+											  )
+									}
+								/>
+							);
+						if (b.color == 'g')
+							return (
+								<ButtonIcon
+									Icon={
+										b.icon ==
+										'Trash' ? (
+											<Trash />
+										) : b.icon ==
+										  'ChartArea' ? (
+											<ChartArea />
+										) : b.icon ==
+										  'Pencil' ? (
+											<Pencil />
+										) : (
+											<Eye />
+										)
+									}
+									className="p-0 size-8 text-white bg-g border-gb"
+									onClick={() =>
+										b.icon ==
+										'Trash'
+											? openModal(
+													'deleteConfirmUserModal',
+											  )
+											: openModal(
+													b.modalId,
+											  )
+									}
+								/>
+							);
+						if (b.color == 'b')
+							return (
+								<ButtonIcon
+									Icon={
+										b.icon ==
+										'Trash' ? (
+											<Trash />
+										) : b.icon ==
+										  'ChartArea' ? (
+											<ChartArea />
+										) : b.icon ==
+										  'Pencil' ? (
+											<Pencil />
+										) : (
+											<Eye />
+										)
+									}
+									className="p-0 size-8 text-white bg-b border-bb"
+									onClick={() =>
+										b.icon ==
+										'Trash'
+											? openModal(
+													'deleteConfirmUserModal',
+											  )
+											: openModal(
+													b.modalId,
+											  )
+									}
+								/>
+							);
+					},
+				)}
 			</div>
 		</div>
 	);

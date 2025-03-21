@@ -17,15 +17,20 @@ const ListComponent = ({
 		<div className="w-full border-1 border-primary rounded-sm px-4 overflow-y-auto h-86 ">
 			{(value
 				? items.filter((i: ListItem) =>
-						i.user.name
+						(
+							(i.user
+								?.name as string) ||
+							(i.contract
+								?.name as string)
+						)
 							.toLowerCase()
 							.includes(
 								value.toLowerCase(),
 							),
 				  )
 				: items
-			).map((i: ListItem) => (
-				<div>
+			).map((i: ListItem, index) => (
+				<div key={index}>
 					<ListItemComponent
 						refetch={refetch}
 						item={i}

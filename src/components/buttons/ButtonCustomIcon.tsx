@@ -14,7 +14,7 @@ const ButtonIcon = ({
 	return (
 		<Button
 			onClick={onClick}
-			className={`p-1 border-primary border-1 bg-transparent size-fit ${className}`}
+			className={`p-1 border-primary border-1 bg-transparent size-fit ${className} `}
 		>
 			{Icon}
 		</Button>

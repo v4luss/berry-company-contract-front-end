@@ -17,8 +17,9 @@ export default async function PublicLayout({
 				<div className="pt-12 h-full">
 					<PublicNavBar
 						options={[
-							'contracts',
+							'users',
 							'rocket',
+							'contracts',
 						]}
 					/>
 				</div>

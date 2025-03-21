@@ -8,11 +8,11 @@ const PublicNavBar = ({ options }: { options: string[] }) => {
 	const pathname = usePathname();
 	const currentUrl = pathname;
 	const optionList = options.map((option: string) => {
-		if (option == 'contracts') {
+		if (option == 'users') {
 			return {
-				name: 'contracts',
+				name: 'users',
 				icon: <Newspaper />,
-				link: '/contracts',
+				link: '/users',
 			};
 		}
 		if (option == 'rocket') {
@@ -20,6 +20,13 @@ const PublicNavBar = ({ options }: { options: string[] }) => {
 				name: 'rocket',
 				icon: <Rocket />,
 				link: '/rocket',
+			};
+		}
+		if (option == 'contracts') {
+			return {
+				name: 'contracts',
+				icon: <Newspaper />,
+				link: '/contracts',
 			};
 		}
 	});
