@@ -16,15 +16,9 @@ export default function LoginPage() {
 	const a = useRef(null);
 	const { openModal } = useContext(ModalContext);
 	const loginHandler = async () => {
-		if (await login()) {
-			localStorage.setItem(
-				'token',
-				JSON.stringify({ user: 'bundinha' }),
-			);
-			router.push('/home');
-		} else {
-			openModal('errorModal', { error: 'login' });
-		}
+		(await login())
+			? router.push('/home')
+			: openModal('errorModal', { error: 'login' });
 	};
 	return (
 		<div className="flex flex-col justify-between h-[550px]">
