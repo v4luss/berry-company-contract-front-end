@@ -1,3 +1,4 @@
+'use client';
 import { Slash } from 'lucide-react';
 
 import {
@@ -8,32 +9,25 @@ import {
 	BreadcrumbPage,
 	BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
+import { usePathname } from 'next/navigation';
 
-export function BreadcrumbWithCustomSeparator() {
+export function BreadCrumbsCustom() {
+	const path = usePathname();
+	const crumbs = path.split('/');
 	return (
 		<Breadcrumb>
 			<BreadcrumbList>
-				<BreadcrumbItem>
-					<BreadcrumbLink href="/">
-						Home
-					</BreadcrumbLink>
-				</BreadcrumbItem>
-				<BreadcrumbSeparator>
-					<Slash />
-				</BreadcrumbSeparator>
-				<BreadcrumbItem>
-					<BreadcrumbLink href="/components">
-						Components
-					</BreadcrumbLink>
-				</BreadcrumbItem>
-				<BreadcrumbSeparator>
-					<Slash />
-				</BreadcrumbSeparator>
-				<BreadcrumbItem>
-					<BreadcrumbPage>
-						Breadcrumb
-					</BreadcrumbPage>
-				</BreadcrumbItem>
+				{crumbs.map((c: string, index: number) => (
+					<BreadcrumbItem key={index}>
+						<BreadcrumbLink href={`/${c}`}>
+							{c}
+						</BreadcrumbLink>
+
+						{index != crumbs.length - 1 && (
+							<span>/</span>
+						)}
+					</BreadcrumbItem>
+				))}
 			</BreadcrumbList>
 		</Breadcrumb>
 	);

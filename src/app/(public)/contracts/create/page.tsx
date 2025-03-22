@@ -505,7 +505,9 @@ export default function CreateContractPage() {
 	const [members, setMembers] = useState<any[]>([]);
 	const [services, setServices] = useState<any[]>([]);
 	const createContractHandler = async () => {
+		console.log('criar e retorna o criado e o link');
 		openModal('confirmContractCreationModal', {
+			id: '1',
 			members,
 			services,
 		});

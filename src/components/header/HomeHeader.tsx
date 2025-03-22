@@ -7,6 +7,7 @@ import { ButtonIcon } from '../buttons/ButtonCustomIcon';
 import { ButtonIconText } from '../buttons/ButtonCustomTextIcon';
 import { useContext } from 'react';
 import { ModalContext } from '@/app/context/ModalContext';
+import { BreadCrumbsCustom } from '../BreadCrumbsCustom';
 const HomeHeader = () => {
 	const { openModal } = useContext(ModalContext);
 	return (
@@ -21,7 +22,7 @@ const HomeHeader = () => {
 				</div>
 
 				<div className="border-l-1 border-l-black h-12 flex items-center pl-4">
-					<p>asdf/asdf</p>
+					<BreadCrumbsCustom />
 				</div>
 			</div>
 			<div className="flex items-center gap-x-8">
