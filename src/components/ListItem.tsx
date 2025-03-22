@@ -5,6 +5,7 @@ import { ListItem } from '@/app/types/ListItemType';
 import { useContext } from 'react';
 import { ButtonIcon } from './buttons/ButtonCustomIcon';
 import { ChartArea, Eye, Pencil, Trash } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 type Props = {
 	item: ListItem;
@@ -12,6 +13,7 @@ type Props = {
 };
 const ListItemComponent = ({ item, refetch }: Props) => {
 	const { openModal } = useContext(ModalContext);
+	const router = useRouter();
 	const { contract, user, subItems, buttons } = item;
 
 	return (
@@ -24,7 +26,10 @@ const ListItemComponent = ({ item, refetch }: Props) => {
 				<div className="flex gap-x-6">
 					{Object.entries(subItems).map(
 						([key, value]) => (
-							<div className="flex gap-x-4">
+							<div
+								key={key}
+								className="flex gap-x-4"
+							>
 								<p className="text-gray-700 text-sm">
 									{key}:
 								</p>
@@ -48,89 +53,74 @@ const ListItemComponent = ({ item, refetch }: Props) => {
 							return (
 								<ButtonIcon
 									Icon={
-										b.icon ==
-										'Trash' ? (
-											<Trash />
-										) : b.icon ==
-										  'ChartArea' ? (
-											<ChartArea />
-										) : b.icon ==
-										  'Pencil' ? (
-											<Pencil />
-										) : (
-											<Eye />
-										)
+										<ChartArea />
 									}
-									className="p-0 size-8 text-white bg-y border-yb"
+									className="p-0 size-8 text-white bg-yellowI border-yellowB"
 									onClick={() =>
-										b.icon ==
-										'Trash'
-											? openModal(
-													'deleteConfirmUserModal',
-											  )
-											: openModal(
-													b.modalId,
-											  )
+										openModal(
+											'addCategoriesModal',
+											{
+												id: user?.id,
+												refetch,
+											},
+										)
 									}
 								/>
 							);
-						if (b.color == 'r')
-							return (
-								<ButtonIcon
-									Icon={
-										b.icon ==
-										'Trash' ? (
+						if (b.color == 'r') {
+							if (user)
+								return (
+									<ButtonIcon
+										Icon={
 											<Trash />
-										) : b.icon ==
-										  'ChartArea' ? (
-											<ChartArea />
-										) : b.icon ==
-										  'Pencil' ? (
-											<Pencil />
-										) : (
-											<Eye />
-										)
-									}
-									className="p-0 size-8 text-white bg-r border-rb"
-									onClick={() =>
-										b.icon ==
-										'Trash'
-											? openModal(
-													'deleteConfirmUserModal',
-											  )
-											: openModal(
-													b.modalId,
-											  )
-									}
-								/>
-							);
+										}
+										className="p-0 size-8 text-white bg-redI border-redB"
+										onClick={() =>
+											openModal(
+												'deleteConfirmUserModal',
+												{
+													id: user.id,
+													refetch,
+												},
+											)
+										}
+									/>
+								);
+							if (contract)
+								return (
+									<ButtonIcon
+										Icon={
+											<Trash />
+										}
+										className="p-0 size-8 text-white bg-redI border-redB"
+										onClick={() =>
+											openModal(
+												'deleteConfirmContractModal',
+												{
+													id: contract.id,
+													refetch,
+												},
+											)
+										}
+									/>
+								);
+						}
 						if (b.color == 'g')
 							return (
 								<ButtonIcon
 									Icon={
-										b.icon ==
-										'Trash' ? (
-											<Trash />
-										) : b.icon ==
-										  'ChartArea' ? (
-											<ChartArea />
-										) : b.icon ==
-										  'Pencil' ? (
-											<Pencil />
-										) : (
-											<Eye />
-										)
+										<Pencil />
 									}
-									className="p-0 size-8 text-white bg-g border-gb"
+									className="p-0 size-8 text-white bg-greenI border-greenB"
 									onClick={() =>
-										b.icon ==
-										'Trash'
-											? openModal(
-													'deleteConfirmUserModal',
-											  )
-											: openModal(
-													b.modalId,
-											  )
+										router.push(
+											'/contracts/' +
+												(
+													contract as any
+												)
+													.id +
+												'/edit',
+										)
 									}
 								/>
 							);
@@ -138,29 +128,17 @@ const ListItemComponent = ({ item, refetch }: Props) => {
 							return (
 								<ButtonIcon
 									Icon={
-										b.icon ==
-										'Trash' ? (
-											<Trash />
-										) : b.icon ==
-										  'ChartArea' ? (
-											<ChartArea />
-										) : b.icon ==
-										  'Pencil' ? (
-											<Pencil />
-										) : (
-											<Eye />
-										)
+										<Eye />
 									}
-									className="p-0 size-8 text-white bg-b border-bb"
+									className="p-0 size-8 text-white bg-blueI border-blueB"
 									onClick={() =>
-										b.icon ==
-										'Trash'
-											? openModal(
-													'deleteConfirmUserModal',
-											  )
-											: openModal(
-													b.modalId,
-											  )
+										router.push(
+											'/contracts/' +
+												(
+													contract as any
+												)
+													.id,
+										)
 									}
 								/>
 							);

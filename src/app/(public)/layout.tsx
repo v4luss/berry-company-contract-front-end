@@ -16,11 +16,7 @@ export default async function PublicLayout({
 			<div className="flex h-full">
 				<div className="pt-12 h-full">
 					<PublicNavBar
-						options={[
-							'users',
-							'rocket',
-							'contracts',
-						]}
+						options={['users', 'contracts']}
 					/>
 				</div>
 				<div className="w-full h-full pt-16 px-36">

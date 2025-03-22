@@ -42,22 +42,22 @@
 	--radius-md: calc(var(--radius) - 2px);
 	--radius-lg: var(--radius);
 	--radius-xl: calc(var(--radius) + 4px);
-	--color-yellowI: var(--y);
-	--color-yellowB: var(--yb);
-	--color-greenI: var(--g);
-	--color-greenB: var(--gb);
-	--color-redI: var(--r);
-	--color-redB: var(--rb);
-	--color-blueI: var(--b);
-	--color-blueB: var(--bb);
-	--color-border-yellowI: var(--y);
-	--color-border-yelloB: var(--yb);
-	--color-border-greenI: var(--g);
-	--color-border-greenB: var(--gb);
-	--color-border-redI: var(--r);
-	--color-border-redB: var(--rb);
-	--color-border-blueI: var(--b);
-	--color-border-blueB: var(--bb);
+	--color-yellowI: var(--yellowI);
+	--color-yellowB: var(--yellowB);
+	--color-greenI: var(--greenI);
+	--color-greenB: var(--greenB);
+	--color-redI: var(--redI);
+	--color-redB: var(--redB);
+	--color-blueI: var(--blueI);
+	--color-blueB: var(--blueB);
+	--color-border-yellowI: var(--yellowI);
+	--color-border-yelloB: var(--yellowB);
+	--color-border-greenI: var(--greenI);
+	--color-border-greenB: var(--greenB);
+	--color-border-redI: var(--redI);
+	--color-border-redB: var(--redB);
+	--color-border-blueI: var(--blueI);
+	--color-border-blueB: var(--blueB);
 }
 
 :root {

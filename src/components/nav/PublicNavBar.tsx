@@ -11,17 +11,11 @@ const PublicNavBar = ({ options }: { options: string[] }) => {
 		if (option == 'users') {
 			return {
 				name: 'users',
-				icon: <Newspaper />,
+				icon: <Rocket />,
 				link: '/users',
 			};
 		}
-		if (option == 'rocket') {
-			return {
-				name: 'rocket',
-				icon: <Rocket />,
-				link: '/rocket',
-			};
-		}
+
 		if (option == 'contracts') {
 			return {
 				name: 'contracts',

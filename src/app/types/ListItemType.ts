@@ -1,6 +1,11 @@
 export type ListItem = {
 	user?: { id: string; name: string };
-	contract?: { name: string; members: any[]; services: any[] };
+	contract?: {
+		id: string;
+		name: string;
+		members: any[];
+		services: any[];
+	};
 	subItems: Record<string, string>;
 	buttons: {
 		icon: string;
