@@ -43,15 +43,21 @@ const ListItemComponent = ({ item, refetch }: Props) => {
 			</div>
 			<div className="flex items-center gap-x-4">
 				{buttons.map(
-					(b: {
-						icon: string;
-						modalId: string;
-						color: string;
-						borderColor: string;
-					}) => {
+					(
+						b: {
+							icon: string;
+							modalId: string;
+							color: string;
+							borderColor: string;
+						},
+						index: number,
+					) => {
 						if (b.color == 'y')
 							return (
 								<ButtonIcon
+									key={
+										index
+									}
 									Icon={
 										<ChartArea />
 									}

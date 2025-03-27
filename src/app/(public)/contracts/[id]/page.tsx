@@ -1,6 +1,7 @@
 'use client';
 
 import { ModalContext } from '@/app/context/ModalContext';
+import { ClauseTemplate, ContractTemplate } from '@/app/types/ClauseType';
 import { ButtonText } from '@/components/buttons/ButtonCustomText';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
@@ -14,8 +15,10 @@ import {
 	TableHeader,
 	TableRow,
 } from '@/components/ui/table';
-import { contractMock } from '@/mocks/contractMock';
-import { CircleMinus, CirclePlus, X } from 'lucide-react';
+import { contractMock } from '@/mocks/clauseMocks';
+import { contractsMock } from '@/mocks/UsersMocks';
+import { useQuery } from '@tanstack/react-query';
+import { Check, CircleMinus, CirclePlus, CircleX, X } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';
 import { Dispatch, SetStateAction, useContext, useState } from 'react';
 type Props = {
@@ -499,7 +502,7 @@ function ServicesTable({ services, setServices }: Props) {
 	);
 }
 
-export default function ContractPage() {
+export default function ContractUniquePage() {
 	const { id } = useParams();
 	const { openModal } = useContext(ModalContext);
 	const router = useRouter();
@@ -513,6 +516,13 @@ export default function ContractPage() {
 			services,
 		});
 	};
+	const { isLoading, data, refetch } = useQuery({
+		queryKey: ['getClauses'],
+		queryFn: async () => {
+			return contractMock;
+		},
+	});
+	if (isLoading) return 'Carregando...';
 	return (
 		<div className="flex flex-col items-center justify-center gap-y-16">
 			<MembersTable
@@ -527,20 +537,78 @@ export default function ContractPage() {
 				members={members}
 				setMembers={setMembers}
 			/>
-			<div className="flex gap-x-6 mb-12">
-				<ButtonText
-					className=""
-					onClick={() => router.push('/home')}
-					text="CANCELAR"
-					type="regular"
-				/>
-				<ButtonText
-					className=""
-					onClick={() => createContractHandler()}
-					text="CRIAR"
-					type="bg-primary"
-				/>
+			<div className=" w-full">
+				<div>
+					<div>
+						<h1 className="font-bold text-lg">
+							Cabeça:
+						</h1>
+						<Separator />
+						<HeadComponent
+							head={
+								(
+									data as ContractTemplate
+								).head
+							}
+						/>
+						<Separator />
+					</div>
+					<div>
+						{(
+							data as ContractTemplate
+						).clauses.map(
+							(
+								c: ClauseTemplate,
+								index: number,
+							) => (
+								<div>
+									<Separator />
+									<h1 className="font-bold text-lg">
+										Clausula
+										{index +
+											1}
+
+										:{' '}
+									</h1>
+									<ClauseComponent
+										clause={
+											c
+										}
+									/>
+									<Separator />
+								</div>
+							),
+						)}
+					</div>
+				</div>
 			</div>
 		</div>
 	);
 }
+
+const ClauseComponent = ({ clause }: { clause: ClauseTemplate }) => {
+	const [clauseTitle, setClauseTitle] = useState<string>(clause.title);
+	const [clauseBody, setClauseBody] = useState<string>(clause.body);
+	return (
+		<div>
+			<h3>{clauseTitle}</h3>
+			<p>{clauseBody}</p>
+		</div>
+	);
+};
+const HeadComponent = ({ head }: { head: string[] }) => {
+	const [heads, setHeads] = useState<string[]>(head);
+	const [newHead, setNewHead] = useState<string>('');
+	const handleHeadDelete = (index: number) => {
+		setHeads(heads.filter((i, j) => j != index));
+	};
+	return (
+		<div>
+			{heads.map((h: string, index: number) => (
+				<div className="flex">
+					<h1>{h}</h1>{' '}
+				</div>
+			))}
+		</div>
+	);
+};
