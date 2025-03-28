@@ -13,12 +13,17 @@ import { login } from '@/lib/Auth';
 import { ModalContext } from '@/app/context/ModalContext';
 export default function LoginPage() {
 	const router = useRouter();
-	const a = useRef(null);
+	const emailRef = useRef<HTMLInputElement>(null);
+	const passwordRef = useRef<HTMLInputElement>(null);
 	const { openModal } = useContext(ModalContext);
 	const loginHandler = async () => {
-		(await login())
-			? router.push('/home')
-			: openModal('errorModal', { error: 'login' });
+		if (emailRef?.current?.value && passwordRef.current?.value)
+			(await login(
+				emailRef.current.value,
+				passwordRef.current.value,
+			))
+				? router.push('/home')
+				: openModal('errorModal', { error: 'login' });
 	};
 	return (
 		<div className="flex flex-col justify-between h-[550px]">
@@ -71,14 +76,14 @@ export default function LoginPage() {
 				</div>
 				<div className=" gap-y-4 flex flex-col items-center">
 					<InputCustom
-						ref={a}
+						ref={emailRef}
 						type="regular"
 						placeholder="Email"
 						className="w-96"
 					/>
 
 					<InputCustom
-						ref={a}
+						ref={passwordRef}
 						type="regular-password-eye"
 						placeholder="Confirme a senha"
 						className="w-96"

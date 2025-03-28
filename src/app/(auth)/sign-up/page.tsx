@@ -13,16 +13,29 @@ import { login, register } from '@/lib/Auth';
 import { ModalContext } from '@/app/context/ModalContext';
 export default function SignUpPage() {
 	const router = useRouter();
-	const a = useRef(null);
 	const { openModal } = useContext(ModalContext);
-
+	const emailRef = useRef<HTMLInputElement>(null);
+	const passwordRef = useRef<HTMLInputElement>(null);
+	const passwordConfirmRef = useRef<HTMLInputElement>(null);
 	const registerHandler = async () => {
-		(await register())
-			? router.push('/home')
-			: openModal('errorModal', { error: 'register' });
+		if (
+			emailRef?.current?.value &&
+			passwordRef?.current?.value &&
+			passwordConfirmRef?.current?.value
+		)
+			passwordRef?.current?.value ==
+				passwordConfirmRef?.current?.value &&
+			(await register(
+				emailRef?.current?.value,
+				passwordRef?.current?.value,
+			))
+				? router.push('/home')
+				: openModal('errorModal', {
+						error: 'register',
+				  });
 	};
 	const loginHandler = async () => {
-		(await login())
+		true
 			? router.push('/home')
 			: openModal('errorModal', { error: 'login' });
 	};
@@ -77,18 +90,18 @@ export default function SignUpPage() {
 				</div>
 				<div className=" gap-y-4 flex flex-col items-center">
 					<InputCustom
-						ref={a}
+						ref={emailRef}
 						type="regular"
 						placeholder="Email"
 					/>
 					<InputCustom
-						ref={a}
+						ref={passwordRef}
 						type="regular-password-eye"
 						placeholder="Confirme a senha"
 						className="w-96"
 					/>
 					<InputCustom
-						ref={a}
+						ref={passwordConfirmRef}
 						type="regular-password-eye"
 						placeholder="Confirme a senha"
 						className="w-96"

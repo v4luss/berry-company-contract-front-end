@@ -6,7 +6,7 @@ import {
 	user4Mock,
 	user5Mock,
 } from './userMocks';
-import { contractMock } from './contractMock';
+import { contractMockDone } from './contractMock';
 
 export const usersMocks: ListItem[] = [
 	{
@@ -102,7 +102,7 @@ export const usersMocks: ListItem[] = [
 ];
 export const contractsMock: ListItem[] = [
 	{
-		contract: contractMock,
+		contract: contractMockDone,
 		subItems: { Status: 'Alive', Data: '02/03/2024' },
 		buttons: [
 			{
@@ -126,7 +126,7 @@ export const contractsMock: ListItem[] = [
 		],
 	},
 	{
-		contract: contractMock,
+		contract: contractMockDone,
 		subItems: { Status: 'Alive', Data: '06/12/2024' },
 		buttons: [
 			{
@@ -150,7 +150,7 @@ export const contractsMock: ListItem[] = [
 		],
 	},
 	{
-		contract: contractMock,
+		contract: contractMockDone,
 		subItems: { Status: 'Off', Data: '12/02/2022' },
 		buttons: [
 			{
@@ -174,7 +174,7 @@ export const contractsMock: ListItem[] = [
 		],
 	},
 	{
-		contract: contractMock,
+		contract: contractMockDone,
 		subItems: { Status: 'Off', Data: '04/06/2025' },
 		buttons: [
 			{
@@ -198,7 +198,7 @@ export const contractsMock: ListItem[] = [
 		],
 	},
 	{
-		contract: contractMock,
+		contract: contractMockDone,
 		subItems: { Status: 'Alive', Data: '01/01/2025' },
 		buttons: [
 			{

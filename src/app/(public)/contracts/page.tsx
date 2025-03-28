@@ -5,7 +5,7 @@ import { ButtonIcon } from '@/components/buttons/ButtonCustomIcon';
 import { ButtonText } from '@/components/buttons/ButtonCustomText';
 import { ListComponent } from '@/components/ListComponent';
 import { SearchComponentBar } from '@/components/SearchBarComponent';
-import { contractMock } from '@/mocks/contractMock';
+import { contractMockDone } from '@/mocks/contractMock';
 import { contractsMock, usersMocks } from '@/mocks/UsersMocks';
 import { useQuery } from '@tanstack/react-query';
 import { ChartArea, Delete, Trash } from 'lucide-react';

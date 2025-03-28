@@ -1,6 +1,15 @@
 import Image from 'next/image';
 import bclogo from '@public/images/bclogo.png';
-export default function AuthPage({ children }: { children: React.ReactNode }) {
+import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
+export default async function AuthPage({
+	children,
+}: {
+	children: React.ReactNode;
+}) {
+	const cookieStore = await cookies();
+	const session = cookieStore.get('session')?.value;
+	if (session) redirect('/home');
 	return (
 		<div className="flex">
 			<div className="relative">

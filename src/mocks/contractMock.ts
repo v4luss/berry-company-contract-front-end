@@ -19,7 +19,7 @@ export const service4Mock = {
 	value: '3400',
 	descount: '15',
 };
-export const contractMock = {
+export const contractMockDone = {
 	id: '1',
 	name: 'namezin',
 	members: [

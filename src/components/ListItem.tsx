@@ -77,6 +77,9 @@ const ListItemComponent = ({ item, refetch }: Props) => {
 							if (user)
 								return (
 									<ButtonIcon
+										key={
+											index
+										}
 										Icon={
 											<Trash />
 										}
@@ -95,6 +98,9 @@ const ListItemComponent = ({ item, refetch }: Props) => {
 							if (contract)
 								return (
 									<ButtonIcon
+										key={
+											index
+										}
 										Icon={
 											<Trash />
 										}
@@ -114,6 +120,9 @@ const ListItemComponent = ({ item, refetch }: Props) => {
 						if (b.color == 'g')
 							return (
 								<ButtonIcon
+									key={
+										index
+									}
 									Icon={
 										<Pencil />
 									}
@@ -124,8 +133,7 @@ const ListItemComponent = ({ item, refetch }: Props) => {
 												(
 													contract as any
 												)
-													.id +
-												'/edit',
+													.id,
 										)
 									}
 								/>
@@ -133,6 +141,9 @@ const ListItemComponent = ({ item, refetch }: Props) => {
 						if (b.color == 'b')
 							return (
 								<ButtonIcon
+									key={
+										index
+									}
 									Icon={
 										<Eye />
 									}

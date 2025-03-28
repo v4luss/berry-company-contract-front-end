@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { cookies } from 'next/headers';
 
 const api = axios.create({
 	baseURL: process.env.BACKEND_URL, // Set your API base URL
@@ -8,8 +9,9 @@ const apiPublic = axios.create({
 	baseURL: process.env.BACKEND_URL, // Set your API base URL
 });
 // Request interceptor
-api.interceptors.request.use((config) => {
-	const token = localStorage.getItem('token'); // Get token from localStorage
+api.interceptors.request.use(async (config) => {
+	const cookieSession = await cookies();
+	const token = cookieSession.get('token'); // Get token from localStorage
 	if (token) {
 		config.headers.Authorization = `Bearer ${token}`; // Attach token to headers
 	}
