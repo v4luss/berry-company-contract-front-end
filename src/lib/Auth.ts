@@ -3,6 +3,7 @@ import { jwtVerify, createRemoteJWKSet } from 'jose';
 import { api, apiPublic } from '@/services/api';
 import { cookies } from 'next/headers';
 import { decodeBase64 } from 'bcryptjs';
+import { NextApiRequest } from 'next';
 
 export async function login(email: string, password: string) {
 	try {
@@ -23,6 +24,28 @@ export async function login(email: string, password: string) {
 	} catch (e) {
 		console.log('Erro ao fazer login: ' + e);
 		return false;
+	}
+}
+export async function loginProvider(code: string, prov: string) {
+	try {
+		const data = await api(
+			`http://localhost:8080/login/oauth2/code/${prov}?code=${code}`,
+			{
+				method: 'GET',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+			},
+		);
+		const cookieStore = await cookies();
+		const token = await data?.headers['token'];
+		cookieStore.delete('session');
+		const session = cookieStore.set({
+			name: 'session',
+			value: JSON.stringify({ token }),
+		});
+	} catch (e) {
+		console.log('Erro em guardar token.');
 	}
 }
 export async function logout() {

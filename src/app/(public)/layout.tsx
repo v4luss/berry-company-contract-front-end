@@ -9,7 +9,7 @@ export default async function PublicLayout({
 	children: React.ReactNode;
 }) {
 	const cookieStore = await cookies();
-	const session = cookieStore.get('session')?.value;
+	const session = cookieStore.get('token')?.value;
 
 	try {
 		const username = await verifyHS256Token(session as string);

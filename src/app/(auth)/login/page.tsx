@@ -2,19 +2,22 @@
 import { ButtonIcon } from '@/components/buttons/ButtonCustomIcon';
 import { InputCustom } from '@/components/input/InputCustom';
 import Image from 'next/image';
-import { useContext, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import google from '@public/images/google.png';
 import dc from '@public/images/dc.png';
 import br from '@public/images/br.png';
 import Link from 'next/link';
 import { ButtonText } from '@/components/buttons/ButtonCustomText';
 import { redirect, useRouter } from 'next/navigation';
-import { login } from '@/lib/Auth';
+import { login, loginProvider } from '@/lib/Auth';
 import { ModalContext } from '@/app/context/ModalContext';
+import GoogleLoginButton from '@/components/buttons/GoogleLoginButton';
+import { api, apiPublic } from '@/services/api';
 export default function LoginPage() {
 	const router = useRouter();
 	const emailRef = useRef<HTMLInputElement>(null);
 	const passwordRef = useRef<HTMLInputElement>(null);
+	const [prov, setProv] = useState<string | undefined>();
 	const { openModal } = useContext(ModalContext);
 	const loginHandler = async () => {
 		if (emailRef?.current?.value && passwordRef.current?.value)
@@ -25,6 +28,27 @@ export default function LoginPage() {
 				? router.push('/home')
 				: openModal('errorModal', { error: 'login' });
 	};
+	const redirectToGoogle = () => {
+		setProv('google');
+		window.location.href =
+			'http://localhost:8080/oauth2/authorization/google';
+	};
+	const redirectToDiscord = () => {
+		setProv('discord');
+		window.location.href =
+			'http://localhost:8080/oauth2/authorization/discord';
+	};
+	useEffect(() => {
+		// Handle the response from the backend after successful login
+		const urlParams = new URLSearchParams(window.location.search);
+		if (urlParams.has('code')) {
+			const code = urlParams.get('code');
+
+			// Call the backend to exchange the code for a JWT
+
+			loginProvider(code as string, prov as string);
+		}
+	}, []);
 	return (
 		<div className="flex flex-col justify-between h-[550px]">
 			<div className="flex justify-end">
@@ -54,24 +78,32 @@ export default function LoginPage() {
 							}
 							className=" w-10 h-10"
 							onClick={() =>
-								loginHandler()
+								redirectToDiscord()
 							}
 						/>
-						<ButtonIcon
-							Icon={
-								<Image
-									src={
-										google
-									}
-									alt=""
-									className="size-full"
-								/>
+						<a
+							href={
+								(process.env
+									.BACKEND_URL as string) +
+								'/oauth2/authorization/google'
 							}
-							className="w-10 h-10"
-							onClick={() =>
-								loginHandler()
-							}
-						/>
+						>
+							<ButtonIcon
+								Icon={
+									<Image
+										src={
+											google
+										}
+										alt=""
+										className="size-full"
+									/>
+								}
+								className="w-10 h-10"
+								onClick={() =>
+									redirectToGoogle()
+								}
+							/>
+						</a>
 					</div>
 				</div>
 				<div className=" gap-y-4 flex flex-col items-center">
@@ -81,7 +113,6 @@ export default function LoginPage() {
 						placeholder="Email"
 						className="w-96"
 					/>
-
 					<InputCustom
 						ref={passwordRef}
 						type="regular-password-eye"

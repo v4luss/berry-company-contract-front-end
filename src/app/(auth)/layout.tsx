@@ -8,7 +8,7 @@ export default async function AuthPage({
 	children: React.ReactNode;
 }) {
 	const cookieStore = await cookies();
-	const session = cookieStore.get('session')?.value;
+	const session = cookieStore.get('token')?.value;
 	if (session) redirect('/home');
 	return (
 		<div className="flex">
