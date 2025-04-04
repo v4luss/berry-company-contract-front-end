@@ -2,6 +2,8 @@ import Image from 'next/image';
 import bclogo from '@public/images/bclogo.png';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
+import { setToken } from '@/mocks/token';
+import { Button } from '@/components/ui/button';
 export default async function AuthPage({
 	children,
 }: {
@@ -9,6 +11,7 @@ export default async function AuthPage({
 }) {
 	const cookieStore = await cookies();
 	const session = cookieStore.get('token')?.value;
+
 	if (session) redirect('/home');
 	return (
 		<div className="flex">

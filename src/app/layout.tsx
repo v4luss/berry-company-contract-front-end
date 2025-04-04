@@ -4,6 +4,7 @@ import './globals.css';
 import { Providers } from '@/providers/Providers';
 import { cookies } from 'next/headers';
 import { verifyHS256Token } from '@/lib/Auth';
+import { setToken } from '@/mocks/token';
 
 const geistSans = Geist({
 	variable: '--font-geist-sans',
@@ -26,8 +27,9 @@ export default async function RootLayout({
 	children: React.ReactNode;
 }>) {
 	const cookiesStore = await cookies();
-	const token = cookiesStore.get('session')?.value;
+	const token = cookiesStore.get('token')?.value;
 	const email = token ? (await verifyHS256Token(token)).sub : undefined;
+
 	return (
 		<html lang="en">
 			<body

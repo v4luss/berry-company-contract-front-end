@@ -4,6 +4,7 @@ import { AddUserModal } from '@/components/modals/AddUserModal';
 import { ConfirmContractCreationModal } from '@/components/modals/ConfirmContractCreation';
 import { DeleteConfirmContractModal } from '@/components/modals/DeleteConfirmContractModal';
 import { DeleteConfirmUserModal } from '@/components/modals/DeleteConfirmUserModal';
+import PaymentModal from '@/components/modals/PaymentModal';
 import { ResetPasswordCodeModal } from '@/components/modals/ResetPasswordCodeModal.tsx';
 import { createContext, useState, ReactNode, useContext } from 'react';
 
@@ -61,6 +62,9 @@ const MODAL_CONTENT: Record<string, (data?: Record<string, any>) => ReactNode> =
 			<ConfirmContractCreationModal
 				data={data as Record<string, any>}
 			/>
+		),
+		paymentModal: (data) => (
+			<PaymentModal data={data as Record<string, any>} />
 		),
 	};
 

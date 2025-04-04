@@ -655,6 +655,12 @@ export function ViewContractPage({ id }: { id: string }) {
 			return contractMock;
 		},
 	});
+	const sign = () => {
+		router.push(id + '/sign-contract');
+	};
+	const pay = () => {
+		router.push(id + '/payment');
+	};
 	if (isLoading) return 'Carregando...';
 	return (
 		<div className="flex flex-col items-center justify-center gap-y-16">
@@ -703,20 +709,36 @@ export function ViewContractPage({ id }: { id: string }) {
 					</div>
 				</div>
 			</div>
-			<MembersTable
-				adminFlag={false}
-				services={services}
-				setServices={setServices}
-				members={members}
-				setMembers={setMembers}
-			/>
-			<ServicesTable
-				adminFlag={false}
-				services={services}
-				setServices={setServices}
-				members={members}
-				setMembers={setMembers}
-			/>
+			<div>
+				<MembersTable
+					adminFlag={false}
+					services={services}
+					setServices={setServices}
+					members={members}
+					setMembers={setMembers}
+				/>
+				<ServicesTable
+					adminFlag={false}
+					services={services}
+					setServices={setServices}
+					members={members}
+					setMembers={setMembers}
+				/>
+			</div>
+			<div className="flex justify-center items-center gap-x-24 pb-24">
+				<ButtonText
+					className=""
+					onClick={pay}
+					text="PAGAR"
+					type="regular"
+				/>
+				<ButtonText
+					className=""
+					onClick={sign}
+					text="ASSINAR"
+					type="bg-primary"
+				/>
+			</div>
 		</div>
 	);
 }
