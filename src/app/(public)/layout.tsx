@@ -19,7 +19,7 @@ export default async function PublicLayout({
 	try {
 		const username = await verifyHS256Token(session as string);
 		return (
-			<div className="h-full">
+			<div className="h-full ">
 				<HomeHeader username={username.sub as string} />
 				<div className="flex h-full">
 					<div className="pt-12 h-full">
