@@ -5,6 +5,8 @@ import { createContext, useContext } from 'react';
 
 type CookieContextType = {
 	email?: string;
+	id?: string;
+	username?: string;
 };
 
 const CookieContext = createContext<CookieContextType>({});

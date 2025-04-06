@@ -22,10 +22,8 @@ export default function LoginPage() {
 	const { openModal } = useContext(ModalContext);
 	const handleSetToken = async () => {
 		const token =
-			'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyMiIsImlhdCI6MTc0Mzc5NjQwOSwiZXhwIjoxNzQzODgyODA5fQ.wenDJgV2VZXN3mQwYLkNj9w8oBwc2AY9yIXZfVQbxCY';
-		document.cookie = `token=${token}; path=/; max-age=${
-			60 * 60 * 24
-		}`;
+			'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyMTFAZ21haWwuY29tIiwiaWF0IjoxNzQzODk0MDg0LCJleHAiOjE3NDM5ODA0ODR9.4WGK7v-lmBfzbyjJ3-PvQISu4PlOKifswetkhDpYXRs';
+		document.cookie = `token=${token}; path=/; `;
 		console.log('Token set in client cookie');
 	};
 

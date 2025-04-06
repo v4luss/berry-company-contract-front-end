@@ -4,7 +4,7 @@ import './globals.css';
 import { Providers } from '@/providers/Providers';
 import { cookies } from 'next/headers';
 import { verifyHS256Token } from '@/lib/Auth';
-import { setToken } from '@/mocks/token';
+import { randomUUID } from 'crypto';
 
 const geistSans = Geist({
 	variable: '--font-geist-sans',
@@ -28,14 +28,23 @@ export default async function RootLayout({
 }>) {
 	const cookiesStore = await cookies();
 	const token = cookiesStore.get('token')?.value;
-	const email = token ? (await verifyHS256Token(token)).sub : undefined;
+	const user = token ? await verifyHS256Token(token) : undefined;
 
 	return (
 		<html lang="en">
 			<body
 				className={`h-[480px] ${geistSans.variable} ${geistMono.variable} antialiased`}
 			>
-				<Providers cookies={{ email }}>
+				<Providers
+					cookies={{
+						email: user?.sub,
+						username: user?.sub?.substring(
+							0,
+							user.sub.indexOf('@'),
+						),
+						id: randomUUID(),
+					}}
+				>
 					{children}
 				</Providers>
 			</body>

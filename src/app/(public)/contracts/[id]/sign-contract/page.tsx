@@ -100,7 +100,8 @@ export default function SignPage() {
 							className=""
 							onClick={() =>
 								router.push(
-									'payment',
+									'/payment/' +
+										id,
 								)
 							}
 							text="PAGAR"

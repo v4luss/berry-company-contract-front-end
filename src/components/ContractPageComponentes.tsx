@@ -659,7 +659,7 @@ export function ViewContractPage({ id }: { id: string }) {
 		router.push(id + '/sign-contract');
 	};
 	const pay = () => {
-		router.push(id + '/payment');
+		router.push('/payment/' + id);
 	};
 	if (isLoading) return 'Carregando...';
 	return (

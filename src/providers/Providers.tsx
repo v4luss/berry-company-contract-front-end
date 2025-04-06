@@ -13,6 +13,8 @@ export function Providers({
 	children: React.ReactNode;
 	cookies: {
 		email?: string | undefined;
+		id?: string | undefined;
+		username?: string | undefined;
 	};
 }) {
 	return (

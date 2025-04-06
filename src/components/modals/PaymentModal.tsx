@@ -20,6 +20,7 @@ const PaymentModal = ({ data }: { data: Record<string, any> }) => {
 	const [tax, setTax] = useState<string | undefined>();
 
 	const handlePayment = () => {
+		data.cupon;
 		setDone(true);
 	};
 	if (method == 'card' && !done)
