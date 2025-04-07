@@ -1,15 +1,26 @@
-export async function sendCode(value: string) {
+'use server';
+import { api, apiPublic } from '@/services/api';
+
+export async function sendCode(email: string) {
 	try {
-		console.log('send verification code: ' + value);
+		console.log(email);
+		const response = await apiPublic('/send-code', {
+			method: 'POST',
+			data: { email },
+		});
+		console.log(response.data);
 		return true;
 	} catch (e) {
 		console.log('Erro ao enviar código: ' + e);
 		return false;
 	}
 }
-export async function verifyCode(value: string) {
+export async function verifyCode(code: string, email: string) {
 	try {
-		console.log('veify code: ' + value);
+		await apiPublic('/verify-code', {
+			method: 'POST',
+			data: { email, code },
+		});
 		return true;
 	} catch (e) {
 		console.log('Erro ao verificar código: ' + e);
@@ -17,9 +28,17 @@ export async function verifyCode(value: string) {
 	}
 }
 
-export async function updatePassword() {
+export async function updatePassword(
+	code: string,
+	email: string,
+	password: string,
+) {
+	console.log(email + code + password);
 	try {
-		console.log('update password');
+		await apiPublic('/reset-password', {
+			method: 'POST',
+			data: { email, code, password },
+		});
 		return true;
 	} catch (e) {
 		console.log('Erro ao atualizar senha: ' + e);

@@ -28,11 +28,12 @@ export default async function RootLayout({
 }>) {
 	const cookiesStore = await cookies();
 	const token = cookiesStore.get('token');
-
-	if (!token) {
-		cookiesStore.set('token', process.env.T as string);
+	let user;
+	let username;
+	if (token) {
+		user = token ? await verifyHS256Token(token.value) : undefined;
+		username = user?.sub?.substring(0, user.sub.indexOf('@'));
 	}
-	const user = token ? await verifyHS256Token(token.value) : undefined;
 
 	return (
 		<html lang="en">
@@ -42,10 +43,7 @@ export default async function RootLayout({
 				<Providers
 					cookies={{
 						email: user?.sub,
-						username: user?.sub?.substring(
-							0,
-							user.sub.indexOf('@'),
-						),
+						username: username,
 						id: randomUUID(),
 					}}
 				>

@@ -4,10 +4,12 @@ import { cookies } from 'next/headers';
 
 const api = axios.create({
 	baseURL: process.env.BACKEND_URL, // Set your API base URL
+	headers: { 'Content-Type': 'application/json' },
 });
 
 const apiPublic = axios.create({
 	baseURL: process.env.BACKEND_URL, // Set your API base URL
+	headers: { 'Content-Type': 'application/json' },
 });
 // Request interceptor
 api.interceptors.request.use(async (config) => {

@@ -17,8 +17,8 @@ export async function login(email: string, password: string) {
 		const token = res.data;
 		const cookieStore = await cookies();
 		const session = cookieStore.set({
-			name: 'session',
-			value: JSON.stringify({ token }),
+			name: 'token',
+			value: JSON.stringify(token),
 		});
 		return true;
 	} catch (e) {
@@ -29,7 +29,7 @@ export async function login(email: string, password: string) {
 export async function loginProvider(code: string, prov: string) {
 	try {
 		const data = await api(
-			`http://localhost:8080/login/oauth2/code/${prov}?code=${code}`,
+			`/login/oauth2/code/${prov}?code=${code}`,
 			{
 				method: 'GET',
 				headers: {
@@ -39,10 +39,10 @@ export async function loginProvider(code: string, prov: string) {
 		);
 		const cookieStore = await cookies();
 		const token = await data?.headers['token'];
-		cookieStore.delete('session');
+		cookieStore.delete('token');
 		const session = cookieStore.set({
-			name: 'session',
-			value: JSON.stringify({ token }),
+			name: 'token',
+			value: JSON.stringify(token),
 		});
 	} catch (e) {
 		console.log('Erro em guardar token.');
@@ -50,9 +50,9 @@ export async function loginProvider(code: string, prov: string) {
 }
 export async function logout() {
 	try {
-		console.log('login');
+		console.log('logout');
 		const cookieStore = await cookies();
-		cookieStore.delete('session');
+		cookieStore.delete('token');
 		return true;
 	} catch (e) {
 		console.log('Erro ao fazer logout: ' + e);
@@ -75,8 +75,9 @@ export async function register(email: string, password: string) {
 }
 export async function verifyHS256Token(token: string) {
 	try {
-		const secret = Buffer.from(process.env.JWT_SECRET!, 'base64');
-		const secretKey = new Uint8Array(secret);
+		const secretKey = new TextEncoder().encode(
+			process.env.JWT_SECRET,
+		);
 
 		const { payload } = await jwtVerify(token, secretKey, {
 			algorithms: ['HS256'], // Explicitly specify the algorithm

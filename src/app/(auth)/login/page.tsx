@@ -20,14 +20,8 @@ export default function LoginPage() {
 	const [backendUrl, setBackendUrl] = useState<string>('');
 	const [prov, setProv] = useState<string | undefined>();
 	const { openModal } = useContext(ModalContext);
-	const handleSetToken = async () => {
-		const token = process.env.T;
-		document.cookie = `token=${token}; path=/; `;
-		console.log('Token set in client cookie');
-	};
 
 	const loginHandler = async () => {
-		handleSetToken();
 		router.push('/home');
 		// if (emailRef?.current?.value && passwordRef.current?.value)
 		// 	(await login(
@@ -35,7 +29,7 @@ export default function LoginPage() {
 		// 		passwordRef.current.value,
 		// 	))
 		// 		? router.push('/home')
-		// 		: openModal('errorModal', { error: 'login' });
+		// 		: openModal('errorModal', { error: 'Erro no login. Verifique suas credenciais e tente novamente. Se o problema persistir, entre em contato conosco.' });
 	};
 	const redirectToGoogle = () => {
 		setProv('google');

@@ -5,14 +5,15 @@ import { useContext, useState } from 'react';
 import { Button } from '../ui/button';
 import { OTPInput } from 'input-otp';
 import { OTPInputCustom } from '../input/OTPInputCustom';
-import { sendCode } from '@/lib/ResetPassword';
+import { sendCode, verifyCode } from '@/lib/ResetPassword';
 import { X } from 'lucide-react';
 type dataType = Record<string, any>;
 const ResetPasswordCodeModal = ({ data }: { data: dataType }) => {
 	const { closeModal } = useContext(ModalContext);
 	const [value, setValue] = useState<string>('');
-	const verifyCode = async () => {
-		await sendCode(value);
+	const verifyCodeHandler = async () => {
+		await verifyCode(value, data.email);
+		data.setCode(value);
 		data.setState('password');
 		closeModal();
 	};
@@ -37,7 +38,7 @@ const ResetPasswordCodeModal = ({ data }: { data: dataType }) => {
 					value={value}
 					setValue={setValue}
 				/>
-				<Button onClick={() => verifyCode()}>
+				<Button onClick={() => verifyCodeHandler()}>
 					CONFIRMAR
 				</Button>
 			</div>

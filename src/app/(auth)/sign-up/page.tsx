@@ -31,13 +31,15 @@ export default function SignUpPage() {
 			))
 				? router.push('/home')
 				: openModal('errorModal', {
-						error: 'register',
+						error: 'Erro ao registrar, verifique os dados e tente novamente. Se o problema persistir, entre em contato conosco',
 				  });
 	};
 	const loginHandler = async () => {
 		true
 			? router.push('/home')
-			: openModal('errorModal', { error: 'login' });
+			: openModal('errorModal', {
+					error: 'Erro ao fazer login, verifique os dados e tente novamente. Se o problema persistir, entre em contato conosco',
+			  });
 	};
 	return (
 		<div className="flex flex-col justify-between h-[550px]">

@@ -15,19 +15,35 @@ export default function PasswordPage() {
 	const router = useRouter();
 	const modalId = 'resetPasswordCodeModal';
 	const [state, setState] = useState<string>('email');
-	const a = useRef(null);
+	const [code, setCode] = useState<string>('');
+	const [currentEmail, setEmail] = useState<string | undefined>();
+	const email = useRef<HTMLInputElement>(null);
+	const password = useRef<HTMLInputElement>(null);
+	const passwordConfirm = useRef<HTMLInputElement>(null);
 	const { openModal } = useContext(ModalContext);
 	const sendCodeToEmail = async () => {
-		(await sendCode('as'))
-			? openModal(modalId, { setState })
+		setEmail(email.current?.value);
+		(await sendCode(email.current?.value as string))
+			? openModal(modalId, {
+					setState,
+					setCode,
+					email: email.current?.value as string,
+			  })
 			: openModal('errorModal', {
-					error: 'sendVerificationCode',
+					error: 'Erro ao enviar código, verifique os dados e tente novamente. Se o problema persistir, entre em contato conosco.',
 			  });
 	};
 	const sendNewPassword = async () => {
-		(await updatePassword())
-			? router.push('/login')
-			: openModal('errorModal', { error: 'updatePassword' });
+		if (password.current?.value == passwordConfirm.current?.value)
+			(await updatePassword(
+				code,
+				currentEmail as string,
+				password.current?.value as string,
+			))
+				? router.push('/login')
+				: openModal('errorModal', {
+						error: 'Erro ao atualizar senha, verifique os dados e tente novamente. Se o problema persistir, entre em contato conosco',
+				  });
 	};
 	return (
 		<div className="flex flex-col justify-between h-[550px]">
@@ -56,7 +72,7 @@ export default function PasswordPage() {
 					</div>
 					<div className=" gap-y-4 flex flex-col items-center">
 						<InputCustom
-							ref={a}
+							ref={email}
 							type="regular"
 							placeholder="Email"
 						/>
@@ -104,12 +120,12 @@ export default function PasswordPage() {
 					</div>
 					<div className=" gap-y-4 flex flex-col items-center">
 						<InputCustom
-							ref={a}
+							ref={password}
 							type="regular-password-eye"
 							placeholder="Nova Senha"
 						/>
 						<InputCustom
-							ref={a}
+							ref={passwordConfirm}
 							type="regular-password-eye"
 							placeholder="Confirme a Senha"
 						/>
