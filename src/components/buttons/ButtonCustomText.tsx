@@ -1,5 +1,6 @@
 import { MouseEventHandler } from 'react';
 import { Button } from '../ui/button';
+import { usePathname } from 'next/navigation';
 
 const ButtonText = ({
 	type,
@@ -16,11 +17,16 @@ const ButtonText = ({
 	className: string;
 	icon?: React.ReactNode;
 }) => {
+	const pathname = usePathname();
 	if (type == 'regular')
 		return (
 			<Button
 				disabled={disabled == true}
-				className={`p-1 border-primary border-1 bg-transparent text-foreground font-normal px-8 rounded-sm duration-200 transition-all hover:text-white hover:bg-primary ${className}`}
+				className={`p-1 border-primary border-1  bg-transparent  font-normal px-8 rounded-sm duration-200 transition-all hover:text-black hover:bg-primary ${
+					pathname.startsWith('/contracts/')
+						? ' text-black'
+						: ' text-white'
+				} ${className}`}
 				onClick={onClick}
 			>
 				{icon}
@@ -31,7 +37,11 @@ const ButtonText = ({
 		return (
 			<Button
 				disabled={disabled == true}
-				className={`p-1 border-primary border-1 bg-primary text-white font-normal px-8 rounded-sm duration-200 transition-all hover:text-black hover:bg-transparent ${className}`}
+				className={`p-1 border-primary border-1 bg-primary text-white font-normal px-8 rounded-sm duration-200 transition-all hover:text-primary hover:bg-transparent ${
+					pathname.startsWith('/contracts/')
+						? 'text-white'
+						: 'text-black'
+				} ${className}`}
 				onClick={onClick}
 			>
 				{icon}

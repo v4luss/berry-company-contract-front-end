@@ -111,13 +111,25 @@ function MembersTable({ members, setMembers, adminFlag }: Props) {
 				</TableRow>
 			</TableHeader>
 
-			<TableBody className="bg-[#3434341A]  ">
-				{members.map((member, index) => (
+			<TableBody className="bg-[#3434341A] rounded-b-md ">
+				{members.map((member, index: number) => (
 					<TableRow
 						key={index}
-						className="border-b-transparent"
+						className={`border-b-transparent ${
+							index ==
+								members.length -
+									1 &&
+							'rounded-bl-md'
+						}`}
 					>
-						<TableCell className="font-medium text-center w-60">
+						<TableCell
+							className={`font-medium text-center w-60 ${
+								index ==
+									members.length -
+										1 &&
+								'rounded-bl-md'
+							}`}
+						>
 							{member.user.name}
 						</TableCell>
 						<TableCell className="text-center w-60">
@@ -129,7 +141,14 @@ function MembersTable({ members, setMembers, adminFlag }: Props) {
 						<TableCell className="text-center w-60">
 							{member.value}
 						</TableCell>
-						<TableCell className="text-center  w-60">
+						<TableCell
+							className={`text-center  w-60 ${
+								index ==
+									members.length -
+										1 &&
+								'rounded-br-md'
+							}`}
+						>
 							{member.terms}
 						</TableCell>
 						{adminFlag && (
@@ -287,51 +306,53 @@ function ServicesTable({ services, setServices, adminFlag }: Props) {
 		initialValue: string,
 		discount: string,
 	): string => {
-		try {
-			const ini = parseFloat(initialValue); // Convert initialValue to a number
-			const dis = parseFloat(discount); // Convert discount to a number
-			if (isNaN(ini) || isNaN(dis)) {
-				return 'Desconto ou valor inicial inválidos.';
-			}
-			const discountAmount = (ini * dis) / 100; // Calculate discount amount
-			const finalValue = ini - discountAmount; // Calculate final value
-			return finalValue.toString(); // Return final value rounded to 2 decimal places
-		} catch (e) {
+		const ini = parseFloat(initialValue); // Convert initialValue to a number
+		const dis = parseFloat(discount); // Convert discount to a number
+		if (isNaN(ini) || isNaN(dis)) {
 			return 'Desconto ou valor inicial inválidos.';
 		}
+		const discountAmount = (ini * dis) / 100; // Calculate discount amount
+		const finalValue = ini - discountAmount; // Calculate final value
+		return finalValue.toFixed(2); // Return final value rounded to 2 decimal places
 	};
+
 	const sumInitialValues = (services: any[]): number => {
-		return services.reduce((sum, service) => {
-			const initialValue = parseFloat(service.initialValue); // Convert initialValue to a number
-			return sum + (isNaN(initialValue) ? 0 : initialValue); // Add to sum, default to 0 if invalid
-		}, 0); // Start with an initial sum of 0
+		return services
+			.map((s) => {
+				const sub =
+					(parseFloat(s.value) *
+						parseFloat(s.descount)) /
+					100;
+				return s.value - sub;
+			})
+			.reduce((sum, v) => {
+				return sum + v;
+			});
 	};
+
 	const sumValues = (services: any[]): number => {
 		return services.reduce((sum, service) => {
 			const initialValue = parseFloat(service.value); // Convert initialValue to a number
 			return sum + (isNaN(initialValue) ? 0 : initialValue); // Add to sum, default to 0 if invalid
 		}, 0); // Start with an initial sum of 0
 	};
-	const sumDiscountAmounts = (services: any[]): number => {
-		return services.reduce((sum, service) => {
-			const initialValue = parseFloat(service.initialValue); // Convert initialValue to a number
-			const discountPercentage = parseFloat(service.discount); // Convert discount to a number
-			if (isNaN(initialValue) || isNaN(discountPercentage)) {
-				return sum; // Skip invalid values
-			}
-			const discountAmount =
-				initialValue * (discountPercentage / 100); // Calculate discount amount
-			return sum + discountAmount; // Add to total discount amount
-		}, 0); // Start with an initial sum of 0
+
+	const getFinalValue = (service: any): number => {
+		return service.value - (service.value * service.descount) / 100;
 	};
+
 	const calculateTotalDiscountPercentage = (services: any[]): number => {
-		return (
-			100 -
-			(100 * sumValues(services)) / sumInitialValues(services)
-		);
+		const totalValues = sumValues(services);
+		const totalInitialValues = sumInitialValues(services);
+
+		if (totalInitialValues === 0) {
+			return 0; // Avoid division by zero
+		}
+
+		return 100 - (100 * totalInitialValues) / totalValues; // Calculate the total discount percentage
 	};
 	return (
-		<Table className="rounded-md w-full">
+		<Table className="rounded-md ">
 			<TableHeader className="bg-[#3434341A] rounded-t-md ">
 				<TableRow className="border-b-transparent rounded-t-md ">
 					<TableHead className=" w-60 rounded-tl-md text-center">
@@ -360,7 +381,7 @@ function ServicesTable({ services, setServices, adminFlag }: Props) {
 				</TableRow>
 			</TableHeader>
 
-			<TableBody className="bg-[#3434341A]  w-full">
+			<TableBody className="bg-[#3434341A] w-full">
 				{services.map((service, index) => (
 					<TableRow
 						key={index}
@@ -370,13 +391,14 @@ function ServicesTable({ services, setServices, adminFlag }: Props) {
 							{service.name}
 						</TableCell>
 						<TableCell className="text-center w-60 ">
-							R${service.initialValue}
-						</TableCell>
-						<TableCell className="text-center w-60 ">
-							{service.discout}%
-						</TableCell>
-						<TableCell className="text-center w-60 ">
 							R${service.value}
+						</TableCell>
+						<TableCell className="text-center w-60 ">
+							{service.descount}%
+						</TableCell>
+						<TableCell className="text-center w-60 ">
+							R$
+							{getFinalValue(service)}
 						</TableCell>
 
 						{adminFlag && (
@@ -495,7 +517,12 @@ function ServicesTable({ services, setServices, adminFlag }: Props) {
 						<p className="text-yellow-500">
 							{calculateTotalDiscountPercentage(
 								services,
-							).toString()}
+							)
+								.toString()
+								.substring(
+									0,
+									6,
+								)}
 							%
 						</p>
 					</TableCell>
@@ -507,8 +534,9 @@ function ServicesTable({ services, setServices, adminFlag }: Props) {
 							).toString()}
 						</p>
 					</TableCell>
-
-					<TableCell className=" text-right bg-white"></TableCell>
+					{adminFlag && (
+						<TableCell className=" text-right bg-white"></TableCell>
+					)}
 				</TableRow>
 			</TableBody>
 		</Table>
@@ -528,9 +556,14 @@ export const ClauseComponent = ({ clause }: { clause: ClauseTemplate }) => {
 		});
 	}
 	return (
-		<div>
-			<h3>{clauseTitle}</h3>
-			<p>{clauseBody}</p>
+		<div className="">
+			<h3 className="font-bold">{clauseTitle}</h3>
+			{clause.body.split(';').map((c) => (
+				<div key={c}>
+					<br />
+					<p>{c}</p>
+				</div>
+			))}
 		</div>
 	);
 };
@@ -541,9 +574,9 @@ export const HeadComponent = ({ head }: { head: string[] }) => {
 		setHeads(heads.filter((i, j) => j != index));
 	};
 	return (
-		<div>
+		<div className="space-y-4">
 			{heads.map((h: string, index: number) => (
-				<div className="flex">
+				<div key={h} className="flex">
 					<h1>{h}</h1>{' '}
 				</div>
 			))}
@@ -573,39 +606,37 @@ export function EditContractPage({ id }: { id: string }) {
 	if (isLoading) return 'Carregando...';
 	return (
 		<div className="flex flex-col items-center justify-center gap-y-16">
-			<MembersTable
-				adminFlag
-				services={services}
-				setServices={setServices}
-				members={members}
-				setMembers={setMembers}
-			/>
-			<ServicesTable
-				adminFlag
-				services={services}
-				setServices={setServices}
-				members={members}
-				setMembers={setMembers}
-			/>
+			<div className="space-y-8">
+				<MembersTable
+					adminFlag
+					services={services}
+					setServices={setServices}
+					members={members}
+					setMembers={setMembers}
+				/>
+
+				<ServicesTable
+					adminFlag
+					services={services}
+					setServices={setServices}
+					members={members}
+					setMembers={setMembers}
+				/>
+			</div>
 			<div className=" w-full">
 				<div>
 					<div>
-						<h1 className="font-bold text-lg">
-							Cabeça:
-						</h1>
 						<Separator />
 						<HeadComponent
-							head={
-								(
-									data as ContractTemplate
-								).head
-							}
+							head={(
+								contractMockDone as ContractTemplate
+							).head.split(';')}
 						/>
 						<Separator />
 					</div>
 					<div>
 						{(
-							data as ContractTemplate
+							contractMockDone as ContractTemplate
 						).clauses.map(
 							(
 								c: ClauseTemplate,
@@ -613,13 +644,6 @@ export function EditContractPage({ id }: { id: string }) {
 							) => (
 								<div>
 									<Separator />
-									<h1 className="font-bold text-lg">
-										Clausula
-										{index +
-											1}
-
-										:{' '}
-									</h1>
 									<ClauseComponent
 										clause={
 											c
@@ -665,38 +689,29 @@ export function ViewContractPage({ id }: { id: string }) {
 	return (
 		<div className="flex flex-col items-center justify-center gap-y-16">
 			<div className=" w-full">
+				<h1 className="font-bold text-4xl justify-self-center">
+					{contractMockDone?.name}
+				</h1>
 				<div>
-					<div>
-						<h1 className="font-bold text-lg">
-							Cabeça:
-						</h1>
-						<Separator />
+					<div className="flex flex-col pb-8">
 						<HeadComponent
-							head={
-								(
-									data as ContractTemplate
-								).head
-							}
+							head={(
+								contractMockDone as ContractTemplate
+							).head.split(';')}
 						/>
-						<Separator />
 					</div>
-					<div>
-						{(
-							data as ContractTemplate
-						).clauses.map(
+					<div className="flex flex-col gap-y-4">
+						{contractMockDone.clauses.map(
 							(
 								c: ClauseTemplate,
 								index: number,
 							) => (
-								<div>
-									<Separator />
-									<h1 className="font-bold text-lg">
-										Clausula
-										{index +
-											1}
-
-										:{' '}
-									</h1>
+								<div
+									key={
+										index
+									}
+									className="flex flex-col gap-y-4"
+								>
 									<ClauseComponent
 										clause={
 											c
@@ -709,7 +724,7 @@ export function ViewContractPage({ id }: { id: string }) {
 					</div>
 				</div>
 			</div>
-			<div>
+			<div className="space-y-8">
 				<MembersTable
 					adminFlag={false}
 					services={services}

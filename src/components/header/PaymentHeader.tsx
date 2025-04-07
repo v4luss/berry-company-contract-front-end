@@ -28,7 +28,7 @@ const PaymentHeader = ({ username }: { username: string }) => {
 			<div className="flex items-center gap-x-8">
 				<ButtonIconText
 					Icon={<Plus />}
-					className="h-10 px-4 rounded-sm"
+					className="h-10 px-4 rounded-sm text-black"
 					onClick={() => logoutHandler()}
 					text={username}
 					reverse

@@ -4,7 +4,14 @@ import { useContext, useState } from 'react';
 import { InputCustom } from '../input/InputCustom';
 import { Separator } from '../ui/separator';
 import { ButtonText } from '../buttons/ButtonCustomText';
-import { CheckCheck, CheckCircle, Copy, LoaderIcon, X } from 'lucide-react';
+import {
+	CheckCheck,
+	CheckCircle,
+	Copy,
+	LoaderCircle,
+	LoaderIcon,
+	X,
+} from 'lucide-react';
 import { ModalContext } from '@/app/context/ModalContext';
 import { ButtonIconText } from '../buttons/ButtonCustomTextIcon';
 import { Button } from '../ui/button';
@@ -13,6 +20,7 @@ const PaymentModal = ({ data }: { data: Record<string, any> }) => {
 	const { closeModal } = useContext(ModalContext);
 	const { method } = data;
 	const [done, setDone] = useState<boolean>(false);
+	const [copied, setCopied] = useState(false);
 	const [name, setName] = useState<string | undefined>();
 	const [card, setCard] = useState<string | undefined>();
 	const [date, setDate] = useState<string | undefined>();
@@ -23,9 +31,18 @@ const PaymentModal = ({ data }: { data: Record<string, any> }) => {
 		data.cupon;
 		setDone(true);
 	};
+	const handleCopy = async () => {
+		try {
+			await navigator.clipboard.writeText('text');
+			setCopied(true);
+			setTimeout(() => setCopied(false), 2000); // Reset the copied state after 2 seconds
+		} catch (err) {
+			console.error('Failed to copy: ', err);
+		}
+	};
 	if (method == 'card' && !done)
 		return (
-			<div className="flex flex-col rounded-md border-1 border-primary bg-[#E8EAED]">
+			<div className="flex flex-col rounded-md border-1 border-primary bg-[#E8EAED] ">
 				<div className="flex items-center justify-end w-full p-2">
 					<X
 						className="cursor-pointer"
@@ -216,8 +233,8 @@ const PaymentModal = ({ data }: { data: Record<string, any> }) => {
 				<div className="flex items-start  px-8 py-6 ">
 					<div className="flex flex-col items-center gap-8">
 						<div>
-							<div className="flex pb-2">
-								<LoaderIcon className="text-primary" />
+							<div className="flex pb-2 gap-x-2">
+								<LoaderCircle className="text-primary animate-spin" />
 								<h3>
 									Aguardando
 									pagamento...
@@ -233,7 +250,12 @@ const PaymentModal = ({ data }: { data: Record<string, any> }) => {
 							</p>
 						</div>
 						<div className="bg-gray-600 size-64 rounded-md"></div>
-						<Button className=" flex justify-between w-full border-primary bg-transparent border-1 text-[#343434]">
+						<Button
+							onClick={() =>
+								handleCopy()
+							}
+							className=" flex justify-between w-full border-primary bg-transparent border-1 text-[#343434]"
+						>
 							<div></div>
 							Copiar código pix{' '}
 							<Copy className="text-primary" />

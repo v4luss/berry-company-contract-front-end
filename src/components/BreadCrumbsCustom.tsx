@@ -15,11 +15,23 @@ export function BreadCrumbsCustom() {
 	const path = usePathname();
 	const crumbs = path.split('/');
 	return (
-		<Breadcrumb>
-			<BreadcrumbList>
+		<Breadcrumb className="">
+			<BreadcrumbList
+				className={`${
+					path.startsWith('/contracts/')
+						? 'text-black '
+						: 'text-white'
+				}`}
+			>
 				{crumbs.map((c: string, index: number) => (
-					<BreadcrumbItem key={index}>
-						<BreadcrumbLink href={`/${c}`}>
+					<BreadcrumbItem
+						className=""
+						key={index}
+					>
+						<BreadcrumbLink
+							className="hover:text-primary"
+							href={`/${c}`}
+						>
 							{c}
 						</BreadcrumbLink>
 

@@ -14,7 +14,7 @@ export default async function AuthPage({
 
 	if (session) redirect('/home');
 	return (
-		<div className="flex">
+		<div className="flex bg-gradient-to-tl from-primary/40 via-transparent to-transparent">
 			<div className="relative">
 				<Image
 					src={bclogo}

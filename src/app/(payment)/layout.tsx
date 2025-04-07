@@ -26,10 +26,7 @@ export default async function PaymentLayout({
 	const cookieStore = await cookies();
 	const session = cookieStore.get('token')?.value;
 	if (!session) {
-		cookieStore.set(
-			'token',
-			'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyMTFAZ21haWwuY29tIiwiaWF0IjoxNzQzODk0MDg0LCJleHAiOjE3NDM5ODA0ODR9.4WGK7v-lmBfzbyjJ3-PvQISu4PlOKifswetkhDpYXRs',
-		);
+		cookieStore.set('token', process.env.T as string);
 	}
 
 	try {
@@ -40,7 +37,7 @@ export default async function PaymentLayout({
 				className="w-full h-full"
 				style={{
 					backgroundImage: `url(${paymentPng.src})`,
-					backgroundSize: '90% 60%',
+					backgroundSize: '90% 23%',
 					backgroundPosition: 'top left',
 					backgroundRepeat: 'no-repeat',
 				}}

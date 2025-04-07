@@ -35,7 +35,7 @@ const AddCategoryModal = ({ data }: { data: Record<string, any> }) => {
 		handleAddCategories();
 	};
 	return (
-		<div className="bg-[#E8EAED] px-4 py-2 rounded-md border-1 space-y-4 border-primary">
+		<div className="bg-[#E8EAED] px-4 py-2 rounded-md border-1 space-y-4 border-primary text-black">
 			<div className="flex justify-between w-full">
 				<h1 className="font-bold text-lg">
 					Sete as categorias

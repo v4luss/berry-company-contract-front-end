@@ -9,7 +9,7 @@ const ConfirmContractCreationModal = ({ data }: Record<string, any>) => {
 	const { closeModal } = useContext(ModalContext);
 	const fullUrl = `${window.location.origin}/contracts/${data.id}`;
 	return (
-		<div className="px-4 py-2 rounded-sm bg-[#E8EAED] border-1 border-primary w-lg space-y-4">
+		<div className="px-4 py-2 rounded-sm bg-[#E8EAED] border-1 border-primary w-lg space-y-4 text-black">
 			<div className="flex justify-between items-center">
 				<h1 className="font-bold">Contrato criado!</h1>{' '}
 				<X

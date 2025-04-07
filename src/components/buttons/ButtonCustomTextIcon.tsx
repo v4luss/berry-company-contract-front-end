@@ -1,6 +1,7 @@
 'use client';
 import { MouseEventHandler } from 'react';
 import { Button } from '../ui/button';
+import { usePathname } from 'next/navigation';
 
 const ButtonIconText = ({
 	reverse,
@@ -15,10 +16,15 @@ const ButtonIconText = ({
 	className: string;
 	onClick: MouseEventHandler<HTMLButtonElement>;
 }) => {
+	const pathname = usePathname();
 	return (
 		<Button
 			onClick={onClick}
-			className={` p-1 border-primary border-1 bg-transparent size-fit text-black hover:text-white ${className}`}
+			className={` p-1 border-primary border-1 bg-transparent size-fit text-white ${
+				pathname.startsWith('/contracts/')
+					? ' text-black'
+					: ' text-white'
+			} ${className}`}
 		>
 			{reverse ? (
 				<span className="flex items-center">

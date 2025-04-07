@@ -30,10 +30,10 @@ const ListItemComponent = ({ item, refetch }: Props) => {
 								key={key}
 								className="flex gap-x-4"
 							>
-								<p className="text-gray-700 text-sm">
+								<p className="text-white/60 text-sm">
 									{key}:
 								</p>
-								<p className="text-gray-500 text-sm">
+								<p className="text-white/40 text-sm">
 									{value}
 								</p>
 							</div>

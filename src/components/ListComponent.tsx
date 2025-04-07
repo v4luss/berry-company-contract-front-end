@@ -14,7 +14,7 @@ const ListComponent = ({
 	refetch: Function;
 }) => {
 	return (
-		<div className="w-full border-1 border-primary rounded-sm px-4 overflow-y-auto h-86 ">
+		<div className="w-full border-1 border-primary rounded-sm px-4 overflow-y-auto h-86 mb-24 ">
 			{(value
 				? items.filter((i: ListItem) =>
 						(

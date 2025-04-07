@@ -21,7 +21,7 @@ const InputCustom = ({
 	if (type == 'regular')
 		return (
 			<Input
-				className={`border-primary ring-0 ring-primary focus:ring-2 focus:active:ring-3 rounded-sm transition-all p-5 ${className}`}
+				className={`border-primary ring-0 ring-primary focus:ring-2 focus:active:ring-3 rounded-sm transition-all p-5 text-white  ${className}`}
 				ref={ref}
 				{...(value ? { value: value } : {})}
 				{...(onChange ? { onChange: onChange } : {})}
@@ -36,7 +36,7 @@ const InputCustom = ({
 				className={`flex items-center gap-x-2 ${className}`}
 			>
 				<Input
-					className={`border-primary ring-0 ring-primary focus:ring-2 focus:active:ring-3 rounded-sm transition-all p-5 `}
+					className={`border-primary ring-0 ring-primary focus:ring-2 focus:active:ring-3 rounded-sm transition-all p-5 text-white `}
 					ref={ref}
 					{...(value ? { value: value } : {})}
 					{...(onChange

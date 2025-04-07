@@ -12,7 +12,7 @@ const DeleteConfirmUserModal = ({ data }: Record<string, any>) => {
 		closeModal();
 	};
 	return (
-		<div className="px-4 py-2 rounded-md bg-[#E8EAED] w-lg h-72 border-1 border-primary">
+		<div className="px-4 py-2 rounded-md bg-[#E8EAED] w-lg h-72 border-1 border-primary text-black">
 			<div className="flex flex-col justify-between h-full pb-4">
 				<div className="space-y-2">
 					<div className="flex justify-between items-center">

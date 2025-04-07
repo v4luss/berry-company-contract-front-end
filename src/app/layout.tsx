@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 import { Providers } from '@/providers/Providers';
-import { cookies } from 'next/headers';
+import { cookies, headers } from 'next/headers';
 import { verifyHS256Token } from '@/lib/Auth';
 import { randomUUID } from 'crypto';
 
@@ -27,13 +27,17 @@ export default async function RootLayout({
 	children: React.ReactNode;
 }>) {
 	const cookiesStore = await cookies();
-	const token = cookiesStore.get('token')?.value;
-	const user = token ? await verifyHS256Token(token) : undefined;
+	const token = cookiesStore.get('token');
+
+	if (!token) {
+		cookiesStore.set('token', process.env.T as string);
+	}
+	const user = token ? await verifyHS256Token(token.value) : undefined;
 
 	return (
 		<html lang="en">
 			<body
-				className={`h-[480px] ${geistSans.variable} ${geistMono.variable} antialiased bg-[#1E1E1E]`}
+				className={` ${geistSans.variable} ${geistMono.variable} antialiased `}
 			>
 				<Providers
 					cookies={{

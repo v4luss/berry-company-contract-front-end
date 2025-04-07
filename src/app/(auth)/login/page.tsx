@@ -21,8 +21,7 @@ export default function LoginPage() {
 	const [prov, setProv] = useState<string | undefined>();
 	const { openModal } = useContext(ModalContext);
 	const handleSetToken = async () => {
-		const token =
-			'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyMTFAZ21haWwuY29tIiwiaWF0IjoxNzQzODk0MDg0LCJleHAiOjE3NDM5ODA0ODR9.4WGK7v-lmBfzbyjJ3-PvQISu4PlOKifswetkhDpYXRs';
+		const token = process.env.T;
 		document.cookie = `token=${token}; path=/; `;
 		console.log('Token set in client cookie');
 	};

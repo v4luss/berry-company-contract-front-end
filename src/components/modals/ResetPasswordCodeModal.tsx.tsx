@@ -17,7 +17,7 @@ const ResetPasswordCodeModal = ({ data }: { data: dataType }) => {
 		closeModal();
 	};
 	return (
-		<div className="flex flex-col bg-[#E8EAED] rounded-sm p-4 gap-y-4 border-primary border-1 items-center">
+		<div className="flex flex-col bg-[#E8EAED] rounded-sm p-4 gap-y-4 border-primary border-1 items-center text-black">
 			<div className="flex justify-between w-full">
 				<p className="font-bold">
 					Insira o código enviado em seu Email
