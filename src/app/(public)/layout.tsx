@@ -12,7 +12,7 @@ export default function PublicLayout({
 }) {
 	const { email } = useCookies();
 	const pathname = usePathname();
-	try {
+	if (email) {
 		return (
 			<div
 				className={` ${
@@ -37,7 +37,7 @@ export default function PublicLayout({
 				</div>
 			</div>
 		);
-	} catch (e) {
+	} else {
 		redirect('/login');
 	}
 }
