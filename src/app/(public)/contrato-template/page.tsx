@@ -4,6 +4,7 @@ import { ClauseTemplate, ContractTemplate } from '@/app/types/ClauseType';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { contractMock } from '@/mocks/clauseMocks';
+import { contractMockDone } from '@/mocks/contractMock';
 import { useQuery } from '@tanstack/react-query';
 import { Blocks, Check, CircleX } from 'lucide-react';
 import { useState } from 'react';
@@ -74,7 +75,9 @@ export default function ClausePage() {
 				<h1 className="font-bold text-lg">Cabeça:</h1>
 				<Separator />
 				<HeadComponent
-					head={(data as ContractTemplate).head}
+					head={(
+						contractMockDone as ContractTemplate
+					).head.split(';')}
 				/>
 				<Separator />
 			</div>
