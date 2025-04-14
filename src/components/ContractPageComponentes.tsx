@@ -533,7 +533,7 @@ function ServicesTable({ services, setServices, adminFlag }: Props) {
 					</TableCell>
 					<TableCell className=" w-62 text-center">
 						<p className="text-yellow-500">
-							{sumDiscountAmounts(
+							{calculateTotalDiscountPercentage(
 								services,
 							)
 								?.toString()
@@ -551,7 +551,7 @@ function ServicesTable({ services, setServices, adminFlag }: Props) {
 								sumValues(
 									services,
 								)?.toString(),
-								sumDiscountAmounts(
+								calculateTotalDiscountPercentage(
 									services,
 								)?.toString(),
 							)?.toString()}

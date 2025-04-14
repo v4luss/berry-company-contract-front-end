@@ -63,8 +63,8 @@ function MembersTable({ members, setMembers }: Props) {
 		setNewMember({
 			name,
 			stack,
-			perHour,
-			value,
+			valueHour: perHour,
+			finalValue: value,
 			terms,
 		});
 	};
@@ -119,7 +119,7 @@ function MembersTable({ members, setMembers }: Props) {
 							{member.valueHr}
 						</TableCell>
 						<TableCell className="text-center w-60">
-							{member.value}
+							{member.finalValue}
 						</TableCell>
 						<TableCell className="text-center  w-60">
 							{member.terms}
@@ -262,8 +262,8 @@ function ServicesTable({ services, setServices }: Props) {
 		setNewService({
 			name,
 			initialValue,
-			discout,
-			value,
+			discount: discout,
+			finalValue: value,
 		});
 	};
 	const removeService = (index: number) => {
@@ -275,30 +275,54 @@ function ServicesTable({ services, setServices }: Props) {
 		initialValue: string,
 		discount: string,
 	): string => {
-		try {
-			const ini = parseFloat(initialValue); // Convert initialValue to a number
-			const dis = parseFloat(discount); // Convert discount to a number
-			if (isNaN(ini) || isNaN(dis)) {
-				return 'Desconto ou valor inicial inválidos.';
-			}
-			const discountAmount = (ini * dis) / 100; // Calculate discount amount
-			const finalValue = ini - discountAmount; // Calculate final value
-			return finalValue.toString(); // Return final value rounded to 2 decimal places
-		} catch (e) {
+		const ini = parseFloat(initialValue); // Convert initialValue to a number
+		const dis = parseFloat(discount); // Convert discount to a number
+		if (isNaN(ini) || isNaN(dis)) {
 			return 'Desconto ou valor inicial inválidos.';
 		}
+		const discountAmount = (ini * dis) / 100; // Calculate discount amount
+		const finalValue = ini - discountAmount; // Calculate final value
+		return finalValue.toFixed(2); // Return final value rounded to 2 decimal places
 	};
+
 	const sumInitialValues = (services: any[]): number => {
-		return services.reduce((sum, service) => {
-			const initialValue = parseFloat(service.initialValue); // Convert initialValue to a number
-			return sum + (isNaN(initialValue) ? 0 : initialValue); // Add to sum, default to 0 if invalid
-		}, 0); // Start with an initial sum of 0
+		if (!services || services.length == 0) return 0;
+		return services
+			?.map((s) => {
+				const sub =
+					(parseFloat(s.initialValue) *
+						parseFloat(s.discount)) /
+					100;
+				return s.initialValue - sub;
+			})
+			.reduce((sum, v) => {
+				return sum + v;
+			});
 	};
+
 	const sumValues = (services: any[]): number => {
 		return services?.reduce((sum, service) => {
 			const initialValue = parseFloat(service.initialValue); // Convert initialValue to a number
 			return sum + (isNaN(initialValue) ? 0 : initialValue); // Add to sum, default to 0 if invalid
 		}, 0); // Start with an initial sum of 0
+	};
+
+	const getFinalValue = (service: any): number => {
+		return (
+			service.initialValue -
+			(service.finalValue * service.discount) / 100
+		);
+	};
+
+	const calculateTotalDiscountPercentage = (services: any[]): number => {
+		const totalValues = sumValues(services);
+		const totalInitialValues = sumInitialValues(services);
+
+		if (totalInitialValues === 0) {
+			return 0; // Avoid division by zero
+		}
+
+		return 100 - (100 * totalInitialValues) / totalValues; // Calculate the total discount percentage
 	};
 	const sumDiscountAmounts = (services: any[]): number => {
 		return services?.reduce((sum, service) => {
@@ -311,12 +335,6 @@ function ServicesTable({ services, setServices }: Props) {
 				initialValue * (discountPercentage / 100); // Calculate discount amount
 			return sum + discountAmount; // Add to total discount amount
 		}, 0); // Start with an initial sum of 0
-	};
-	const calculateTotalDiscountPercentage = (services: any[]): number => {
-		return (
-			100 -
-			(100 * sumValues(services)) / sumInitialValues(services)
-		);
 	};
 	return (
 		<Table className="rounded-md w-full">
@@ -470,14 +488,14 @@ function ServicesTable({ services, setServices }: Props) {
 					<TableCell className=" w-62 text-center">
 						<p className="text-red-700">
 							R$
-							{sumInitialValues(
+							{sumValues(
 								services,
 							)?.toString()}
 						</p>
 					</TableCell>
 					<TableCell className=" w-62 text-center">
 						<p className="text-yellow-500">
-							{sumDiscountAmounts(
+							{calculateTotalDiscountPercentage(
 								services,
 							)?.toString()}
 							%
@@ -489,11 +507,11 @@ function ServicesTable({ services, setServices }: Props) {
 							{calculateFinalValue(
 								sumValues(
 									services,
-								).toString(),
-								sumDiscountAmounts(
+								)?.toString(),
+								calculateTotalDiscountPercentage(
 									services,
-								).toString(),
-							).toString()}
+								)?.toString(),
+							)?.toString()}
 						</p>
 					</TableCell>
 
