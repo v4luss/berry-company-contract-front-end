@@ -9,8 +9,8 @@ import { useEffect, useState } from 'react';
 
 export default function ContractUniquePage() {
 	const { id } = useParams();
-	const { email } = useCookies();
-	console.log(email);
-	if (email == 'asdf') return <EditContractPage id={id as string} />;
+	const { role } = useCookies();
+	if (role == 'Administrador')
+		return <EditContractPage id={id as string} />;
 	else return <ViewContractPage id={id as string} />;
 }

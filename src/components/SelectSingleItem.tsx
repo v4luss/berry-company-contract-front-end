@@ -27,7 +27,14 @@ const SelectSingleItem = ({
 	classNameButtons?: string;
 }) => {
 	return (
-		<Select>
+		<Select
+			onValueChange={(val) => {
+				const selected = values.find(
+					(v) => v.value === val,
+				);
+				if (selected) selected.setValue(val);
+			}}
+		>
 			<SelectTrigger
 				className={`w-full border border-primary p-2 rounded-sm flex items-center justify-between ${classNameOutter}`}
 			>

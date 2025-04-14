@@ -3,7 +3,7 @@ import { api, apiPublic } from '@/services/api';
 
 export async function sendCode(email: string) {
 	try {
-		console.log(email);
+		c;
 		const response = await apiPublic('/send-code', {
 			method: 'POST',
 			data: { email },
@@ -33,7 +33,6 @@ export async function updatePassword(
 	email: string,
 	password: string,
 ) {
-	console.log(email + code + password);
 	try {
 		await apiPublic('/reset-password', {
 			method: 'POST',

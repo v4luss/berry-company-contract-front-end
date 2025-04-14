@@ -9,7 +9,7 @@ const ErrorModal = ({ data }: { data: Record<string, any> }) => {
 		<div className="p-6">
 			<div className="flex w-full justify-end">
 				{' '}
-				<X />
+				<X onClick={()=>closeModal()} />
 			</div>
 			<div>
 				<p>

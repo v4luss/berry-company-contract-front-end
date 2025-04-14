@@ -9,15 +9,28 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from './ui/dropdown-menu';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { api } from '@/services/api-client';
+import { CircleX } from 'lucide-react';
 const NotificationDropDownButton = () => {
 	const [notifications, setNotifications] = useState<string[]>([]);
 	const { isLoading, data, refetch } = useQuery({
 		queryKey: ['getNotification'],
 		queryFn: async () => {
-			setNotifications(['asddasf', 'gagadsfasd', 'asdfasds']);
+			const notificationsRes = await api.get(
+				'/notifications',
+			);
+
+			return notificationsRes.data;
 		},
 	});
+	useEffect(() => {
+		setNotifications(data);
+	}, [data]);
+	const handleView = async (id: string) => {
+		await api.put('/notifications/' + id);
+		refetch();
+	};
 	if (isLoading) return 'Carregando';
 	return (
 		<DropdownMenu>
@@ -41,11 +54,18 @@ const NotificationDropDownButton = () => {
 					Notificações
 				</DropdownMenuLabel>
 				<DropdownMenuSeparator />
-				{notifications?.map((n) => (
-					<DropdownMenuItem key={n}>
-						{n}
-					</DropdownMenuItem>
-				))}
+				{notifications
+					?.filter((n: any) => !n.viewed)
+					?.map((n: any) => (
+						<DropdownMenuItem
+							onClick={() =>
+								handleView(n.id)
+							}
+							key={n}
+						>
+							{n.body}{' '}
+						</DropdownMenuItem>
+					))}
 			</DropdownMenuContent>
 		</DropdownMenu>
 	);

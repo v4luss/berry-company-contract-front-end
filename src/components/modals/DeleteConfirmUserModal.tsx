@@ -3,11 +3,13 @@ import { ModalContext } from '@/app/context/ModalContext';
 import { X } from 'lucide-react';
 import { useContext } from 'react';
 import { ButtonText } from '../buttons/ButtonCustomText';
+import { api } from '@/services/api-client';
 
 const DeleteConfirmUserModal = ({ data }: Record<string, any>) => {
 	const { closeModal } = useContext(ModalContext);
 	const handleDelete = async () => {
-		console.log('delete id ' + data.id);
+		await api.delete('/users/' + data.id);
+
 		data.refetch();
 		closeModal();
 	};

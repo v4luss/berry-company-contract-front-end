@@ -23,13 +23,15 @@ export default function LoginPage() {
 
 	const loginHandler = async () => {
 		router.push('/home');
-		// if (emailRef?.current?.value && passwordRef.current?.value)
-		// 	(await login(
-		// 		emailRef.current.value,
-		// 		passwordRef.current.value,
-		// 	))
-		// 		? router.push('/home')
-		// 		: openModal('errorModal', { error: 'Erro no login. Verifique suas credenciais e tente novamente. Se o problema persistir, entre em contato conosco.' });
+		if (emailRef?.current?.value && passwordRef.current?.value)
+			(await login(
+				emailRef.current.value,
+				passwordRef.current.value,
+			))
+				? router.push('/home')
+				: openModal('errorModal', {
+						error: 'Erro no login. Verifique suas credenciais e tente novamente. Se o problema persistir, entre em contato conosco.',
+				  });
 	};
 	const redirectToGoogle = () => {
 		setProv('google');
@@ -50,7 +52,7 @@ export default function LoginPage() {
 
 			loginProvider(code as string, prov as string);
 		}
-		setBackendUrl(process.env.BACKEND_URL as string);
+		setBackendUrl(process.env.NEXT_PUBLIC_BACKEND_URL as string);
 	}, []);
 	return (
 		<div className="flex flex-col justify-between h-[550px]">

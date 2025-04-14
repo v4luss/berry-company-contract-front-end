@@ -3,7 +3,7 @@ import { Search } from 'lucide-react';
 import { Input } from './ui/input';
 type Props = {
 	placeHolder: string;
-	value: string;
+	value: string | undefined;
 	setValue: (value: string) => void;
 };
 const SearchComponentBar = ({ placeHolder, value, setValue }: Props) => {

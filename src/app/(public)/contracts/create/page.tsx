@@ -2,6 +2,7 @@
 
 import { ModalContext } from '@/app/context/ModalContext';
 import { ButtonText } from '@/components/buttons/ButtonCustomText';
+import { SelectSingleItem } from '@/components/SelectSingleItem';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import {
@@ -15,9 +16,11 @@ import {
 	TableRow,
 } from '@/components/ui/table';
 import { contractMockDone } from '@/mocks/contractMock';
+import { api } from '@/services/api-client';
+import { useQuery } from '@tanstack/react-query';
 import { CircleMinus, CirclePlus, X } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { Dispatch, SetStateAction, useContext, useState } from 'react';
+import { Dispatch, SetStateAction, useContext, useRef, useState } from 'react';
 type Props = {
 	members: any[];
 	setMembers: Dispatch<SetStateAction<any[]>>;
@@ -43,10 +46,10 @@ function MembersTable({ members, setMembers }: Props) {
 			setMembers([
 				...members,
 				{
-					user: { name, id },
+					name,
 					stack,
-					perHour,
-					value,
+					valueHr: perHour,
+					finalValue: value,
 					terms,
 				},
 			]);
@@ -58,10 +61,7 @@ function MembersTable({ members, setMembers }: Props) {
 		setTerms('');
 		setValue('');
 		setNewMember({
-			user: {
-				name,
-				id,
-			},
+			name,
 			stack,
 			perHour,
 			value,
@@ -110,13 +110,13 @@ function MembersTable({ members, setMembers }: Props) {
 						className="border-b-transparent"
 					>
 						<TableCell className="font-medium text-center w-60">
-							{member.user.name}
+							{member.name}
 						</TableCell>
 						<TableCell className="text-center w-60">
 							{member.stack}
 						</TableCell>
 						<TableCell className="text-center w-60">
-							{member.perHour}
+							{member.valueHr}
 						</TableCell>
 						<TableCell className="text-center w-60">
 							{member.value}
@@ -250,8 +250,8 @@ function ServicesTable({ services, setServices }: Props) {
 				{
 					name,
 					initialValue,
-					discout,
-					value,
+					discount: discout,
+					finalValue: value,
 				},
 			]);
 		}
@@ -295,13 +295,13 @@ function ServicesTable({ services, setServices }: Props) {
 		}, 0); // Start with an initial sum of 0
 	};
 	const sumValues = (services: any[]): number => {
-		return services.reduce((sum, service) => {
-			const initialValue = parseFloat(service.value); // Convert initialValue to a number
+		return services?.reduce((sum, service) => {
+			const initialValue = parseFloat(service.initialValue); // Convert initialValue to a number
 			return sum + (isNaN(initialValue) ? 0 : initialValue); // Add to sum, default to 0 if invalid
 		}, 0); // Start with an initial sum of 0
 	};
 	const sumDiscountAmounts = (services: any[]): number => {
-		return services.reduce((sum, service) => {
+		return services?.reduce((sum, service) => {
 			const initialValue = parseFloat(service.initialValue); // Convert initialValue to a number
 			const discountPercentage = parseFloat(service.discount); // Convert discount to a number
 			if (isNaN(initialValue) || isNaN(discountPercentage)) {
@@ -359,10 +359,10 @@ function ServicesTable({ services, setServices }: Props) {
 							R${service.initialValue}
 						</TableCell>
 						<TableCell className="text-center w-60 ">
-							{service.discout}%
+							{service.discount}%
 						</TableCell>
 						<TableCell className="text-center w-60 ">
-							R${service.value}
+							R${service.finalValue}
 						</TableCell>
 
 						<TableCell className="text-right bg-white ">
@@ -472,22 +472,27 @@ function ServicesTable({ services, setServices }: Props) {
 							R$
 							{sumInitialValues(
 								services,
-							)}
+							)?.toString()}
 						</p>
 					</TableCell>
 					<TableCell className=" w-62 text-center">
 						<p className="text-yellow-500">
-							{calculateTotalDiscountPercentage(
+							{sumDiscountAmounts(
 								services,
-							).toString()}
+							)?.toString()}
 							%
 						</p>
 					</TableCell>
 					<TableCell className="rounded-br-md w-62 text-center">
 						<p className="text-green-500">
 							R$
-							{sumValues(
-								services,
+							{calculateFinalValue(
+								sumValues(
+									services,
+								).toString(),
+								sumDiscountAmounts(
+									services,
+								).toString(),
 							).toString()}
 						</p>
 					</TableCell>
@@ -503,17 +508,116 @@ export default function CreateContractPage() {
 	const { openModal } = useContext(ModalContext);
 	const router = useRouter();
 	const [members, setMembers] = useState<any[]>([]);
+	const [username, setUsername] = useState<string | undefined>();
+	const [userId, setUserId] = useState<string | undefined>();
 	const [services, setServices] = useState<any[]>([]);
+	const nameRef = useRef<HTMLInputElement>(null);
+	const companyName = useRef<HTMLInputElement>(null);
+	const cnpj = useRef<HTMLInputElement>(null);
+	const clientName = useRef<HTMLInputElement>(null);
+	const clientCnpjCpf = useRef<HTMLInputElement>(null);
+
+	const { data, isLoading } = useQuery({
+		queryKey: ['getUsers'],
+		queryFn: async () => {
+			const users = await api.get('/users');
+			return users.data;
+		},
+	});
+
 	const createContractHandler = async () => {
-		console.log('criar e retorna o criado e o link');
-		openModal('confirmContractCreationModal', {
-			id: '1',
-			members,
-			services,
-		});
+		if (
+			nameRef.current &&
+			companyName.current &&
+			cnpj.current &&
+			clientName.current &&
+			clientCnpjCpf.current
+		) {
+			const header = `NOME DA EMPRESA: ${companyName.current.value}\nCNPJ: ${cnpj.current.value}\nNOME DO CLIENTE: ${clientName.current.value}\nCPF/CNPJ: ${clientCnpjCpf.current.value}`;
+			const contract = {
+				clauses: [
+					{
+						templateId: 'db2015e6-00ef-4ee2-8a63-8bb90b6db80d',
+					},
+					{
+						templateId: 'f0b82d79-2565-42e7-b977-712e91ca8a3a',
+					},
+					{
+						templateId: '0f8d875f-8c62-41bc-b5d7-e523f43e8bbe',
+					},
+					{
+						templateId: 'c1cd6aea-3cbc-4c3a-9a46-fb12761ddbd1',
+					},
+					{
+						templateId: '2260413f-982d-43f7-9a1c-f6a84f415d1c',
+					},
+					{
+						templateId: 'f1599d7e-c838-4b87-81f2-d5ffc67d0eac',
+					},
+					{
+						templateId: 'b603826f-146e-4d9f-8147-c933eb69aa70',
+					},
+					{
+						templateId: 'fbe31b6b-163f-4a11-8a4e-5de518c5f7f4',
+					},
+				],
+				header: { content: header },
+				project: {
+					name: nameRef.current.value,
+					gb: '128gb',
+					userId,
+					teams: [{ members }],
+					services: services,
+				},
+			};
+			const res = await api.post('/contracts', contract);
+
+			openModal('confirmContractCreationModal', {
+				id: res?.data?.id,
+				userId,
+				members,
+				services,
+				name: nameRef?.current.value,
+				header,
+			});
+		}
 	};
+	if (isLoading) return 'Carregando...';
 	return (
 		<div className="flex flex-col items-center justify-center gap-y-16">
+			<p>NOME DO PROJETO: </p>
+			<Input placeholder="Nome do projeto..." ref={nameRef} />
+			<div className="flex flex-col gap-y-4 justify-between w-full self-start">
+				<div className="flex items-center gap-x-4 justify-between">
+					<p className="whitespace-nowrap">
+						NOME DA EMPRESA:{' '}
+					</p>
+					<Input ref={companyName} />
+					<p className="whitespace-nowrap">
+						CNPJ:
+					</p>{' '}
+					<Input ref={cnpj} />
+				</div>
+				<div className="flex items-center gap-x-4">
+					<p className="whitespace-nowrap">
+						NOME DO CLIENTE:
+					</p>{' '}
+					<Input ref={clientName} />
+					<p>CPF/CNPJ: </p>
+					<Input ref={clientCnpjCpf} />
+				</div>
+			</div>
+			<div>
+				<SelectSingleItem
+					values={data.map((u: any) => {
+						return {
+							value: u.id,
+							text: u.username,
+							setValue: setUserId,
+						};
+					})}
+				/>
+			</div>
 			<MembersTable
 				services={services}
 				setServices={setServices}

@@ -1,35 +1,33 @@
 'use client';
 
-import { ListItem } from '@/app/types/ListItemType';
 import { ListItemComponent } from './ListItem';
 import { Separator } from '@radix-ui/react-separator';
 
 const ListComponent = ({
-	items,
+	items = [], // Default to empty array if undefined
 	value,
 	refetch,
 }: {
-	items: ListItem[];
-	value: string;
+	items: any[];
+	value: string | undefined;
 	refetch: Function;
 }) => {
+	const filteredItems = value
+		? items.filter((i: any) =>
+				(
+					(i?.user?.username as string) ||
+					(i?.contract?.project
+						?.name as string) ||
+					''
+				)
+					.toLowerCase()
+					.includes(value.toLowerCase()),
+		  )
+		: items;
+
 	return (
-		<div className="w-full border-1 border-primary rounded-sm px-4 overflow-y-auto h-86 mb-24 ">
-			{(value
-				? items.filter((i: ListItem) =>
-						(
-							(i.user
-								?.name as string) ||
-							(i.contract
-								?.name as string)
-						)
-							.toLowerCase()
-							.includes(
-								value.toLowerCase(),
-							),
-				  )
-				: items
-			).map((i: ListItem, index) => (
+		<div className="w-full border-1 border-primary rounded-sm px-4 overflow-y-auto h-86 mb-24">
+			{filteredItems.map((i: any, index) => (
 				<div key={index}>
 					<ListItemComponent
 						refetch={refetch}
@@ -44,4 +42,5 @@ const ListComponent = ({
 		</div>
 	);
 };
+
 export { ListComponent };

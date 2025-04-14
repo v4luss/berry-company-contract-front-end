@@ -9,7 +9,6 @@ const GoogleLoginButton = () => {
 		// Send the token to the backend
 		try {
 			const res = await apiPublic.post('login', { token });
-			console.log(res.data); // Handle the response from your backend
 		} catch (error) {
 			console.error('Error logging in:', error);
 		}

@@ -15,6 +15,7 @@ export function Providers({
 		email?: string | undefined;
 		id?: string | undefined;
 		username?: string | undefined;
+		role?: string | undefined;
 	};
 }) {
 	return (

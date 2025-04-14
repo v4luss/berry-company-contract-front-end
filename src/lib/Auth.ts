@@ -4,6 +4,7 @@ import { api, apiPublic } from '@/services/api';
 import { cookies } from 'next/headers';
 import { decodeBase64 } from 'bcryptjs';
 import { NextApiRequest } from 'next';
+import { redirect } from 'next/navigation';
 
 export async function login(email: string, password: string) {
 	try {
@@ -28,7 +29,7 @@ export async function login(email: string, password: string) {
 }
 export async function loginProvider(code: string, prov: string) {
 	try {
-		const data = await api(
+		const data = await api.get(
 			`/login/oauth2/code/${prov}?code=${code}`,
 			{
 				method: 'GET',
@@ -75,9 +76,16 @@ export async function register(email: string, password: string) {
 }
 export async function verifyHS256Token(token: string) {
 	try {
-		const secretKey = new TextEncoder().encode(
-			process.env.JWT_SECRET,
-		);
+		const base64Secret = process.env.JWT_SECRET;
+
+		if (!base64Secret) {
+			throw new Error(
+				'JWT_SECRET is not defined in environment variables',
+			);
+		}
+
+		// Decode from Base64 into a Buffer
+		const secretKey = Buffer.from(base64Secret, 'base64');
 
 		const { payload } = await jwtVerify(token, secretKey, {
 			algorithms: ['HS256'], // Explicitly specify the algorithm

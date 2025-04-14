@@ -2,28 +2,35 @@
 import { House, Newspaper, Rocket } from 'lucide-react';
 import { Button } from '../ui/button';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useCookies } from '@/app/context/CookieContext';
 
 const PublicNavBar = ({ options }: { options: string[] }) => {
+	const { role, id } = useCookies();
 	const router = useRouter();
 	const pathname = usePathname();
 	const currentUrl = pathname;
-	const optionList = options.map((option: string) => {
-		if (option == 'users') {
-			return {
-				name: 'users',
-				icon: <Rocket />,
-				link: '/users',
-			};
-		}
+	const optionList = options
+		.filter(
+			(o: string) =>
+				role == 'Administrador' || o == 'contracts',
+		)
+		.map((option: string) => {
+			if (option == 'users') {
+				return {
+					name: 'users',
+					icon: <Rocket />,
+					link: '/users',
+				};
+			}
 
-		if (option == 'contracts') {
-			return {
-				name: 'contracts',
-				icon: <Newspaper />,
-				link: '/contracts',
-			};
-		}
-	});
+			if (option == 'contracts') {
+				return {
+					name: 'contracts',
+					icon: <Newspaper />,
+					link: '/contracts',
+				};
+			}
+		});
 	const setColor = (link: string) => {
 		if (currentUrl == link) return 'primary';
 		if (currentUrl != link) return '[#E4E4E4]';

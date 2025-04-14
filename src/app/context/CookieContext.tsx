@@ -7,6 +7,7 @@ type CookieContextType = {
 	email?: string;
 	id?: string;
 	username?: string;
+	role?: string;
 };
 
 const CookieContext = createContext<CookieContextType>({});

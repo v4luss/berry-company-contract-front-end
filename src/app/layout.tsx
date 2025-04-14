@@ -31,7 +31,11 @@ export default async function RootLayout({
 	let user;
 	let username;
 	if (token) {
-		user = token ? await verifyHS256Token(token.value) : undefined;
+		user = token
+			? await verifyHS256Token(
+					JSON.parse(token.value).access_token,
+			  )
+			: undefined;
 		username = user?.sub?.substring(0, user.sub.indexOf('@'));
 	}
 
@@ -45,6 +49,7 @@ export default async function RootLayout({
 						email: user?.sub,
 						username: username,
 						id: randomUUID(),
+						role: user?.role as string,
 					}}
 				>
 					{children}

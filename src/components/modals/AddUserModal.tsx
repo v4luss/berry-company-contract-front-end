@@ -144,7 +144,6 @@ const AddUserModal = ({ data }: Record<string, any>) => {
 	const [pm, setPm] = useState<boolean>(false);
 	const [plan, setPlan] = useState<string>('');
 	const handleAddUser = async () => {
-		console.log('adduser');
 		closeModal();
 	};
 

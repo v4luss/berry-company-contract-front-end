@@ -5,6 +5,7 @@ import { SelectComponent } from '../SelectComponent';
 import { ButtonText } from '../buttons/ButtonCustomText';
 import { useContext, useState } from 'react';
 import { ModalContext } from '@/app/context/ModalContext';
+import { api } from '@/services/api-client';
 
 const AddCategoryModal = ({ data }: { data: Record<string, any> }) => {
 	const [dev, setDev] = useState<boolean>();
@@ -24,6 +25,10 @@ const AddCategoryModal = ({ data }: { data: Record<string, any> }) => {
 		},
 	];
 	const handleAddCategories = async () => {
+		await api.put('/users', {
+			id: data.id,
+			role: [dev && 'dev', client && 'client'].join(', '),
+		});
 		data.refetch();
 		closeModal();
 	};
@@ -50,7 +55,7 @@ const AddCategoryModal = ({ data }: { data: Record<string, any> }) => {
 				usuário, isso irá liberar para ele.
 			</p>
 			<h1 className="font-bold">Usuário</h1>
-			<p className="text-sm">@{data.name}</p>
+			<p className="text-sm">@{data.username}</p>
 			<div>
 				<h1 className="font-bold">
 					Selecione os cargos:

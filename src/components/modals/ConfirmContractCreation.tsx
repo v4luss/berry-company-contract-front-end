@@ -4,10 +4,12 @@ import { Clipboard, X } from 'lucide-react';
 import { ButtonText } from '../buttons/ButtonCustomText';
 import { useContext } from 'react';
 import { ModalContext } from '@/app/context/ModalContext';
+import { api } from '@/services/api-client';
 
 const ConfirmContractCreationModal = ({ data }: Record<string, any>) => {
 	const { closeModal } = useContext(ModalContext);
 	const fullUrl = `${window.location.origin}/contracts/${data.id}`;
+
 	return (
 		<div className="px-4 py-2 rounded-sm bg-[#E8EAED] border-1 border-primary w-lg space-y-4 text-black">
 			<div className="flex justify-between items-center">

@@ -25,12 +25,11 @@ export default async function PaymentLayout({
 }) {
 	const cookieStore = await cookies();
 	const session = cookieStore.get('token')?.value;
-	if (!session) {
-		cookieStore.set('token', process.env.T as string);
-	}
 
 	try {
-		const username = await verifyHS256Token(session as string);
+		const username = await verifyHS256Token(
+			JSON.parse(session as string).access_token,
+		);
 
 		return (
 			<div

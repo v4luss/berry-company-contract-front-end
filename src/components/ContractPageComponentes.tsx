@@ -19,10 +19,18 @@ import {
 import { contractMock } from '@/mocks/clauseMocks';
 import { contractMockDone } from '@/mocks/contractMock';
 import { contractsMock } from '@/mocks/UsersMocks';
+import { api } from '@/services/api-client';
 import { useQuery } from '@tanstack/react-query';
 import { Check, CircleMinus, CirclePlus, CircleX, X } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';
-import { Dispatch, SetStateAction, useContext, useState } from 'react';
+import {
+	Dispatch,
+	SetStateAction,
+	useContext,
+	useEffect,
+	useState,
+} from 'react';
+import { Button } from './ui/button';
 type Props = {
 	members: any[];
 	setMembers: Dispatch<SetStateAction<any[]>>;
@@ -49,10 +57,10 @@ function MembersTable({ members, setMembers, adminFlag }: Props) {
 			setMembers([
 				...members,
 				{
-					user: { name, id },
+					name,
 					stack,
-					perHour,
-					value,
+					valueHr: perHour,
+					finalValue: value,
 					terms,
 				},
 			]);
@@ -64,13 +72,10 @@ function MembersTable({ members, setMembers, adminFlag }: Props) {
 		setTerms('');
 		setValue('');
 		setNewMember({
-			user: {
-				name,
-				id,
-			},
+			name,
 			stack,
-			perHour,
-			value,
+			valueHr: perHour,
+			finalValue: value,
 			terms,
 		});
 	};
@@ -112,12 +117,12 @@ function MembersTable({ members, setMembers, adminFlag }: Props) {
 			</TableHeader>
 
 			<TableBody className="bg-[#3434341A] rounded-b-md ">
-				{members.map((member, index: number) => (
+				{members?.map((member, index: number) => (
 					<TableRow
 						key={index}
 						className={`border-b-transparent ${
 							index ==
-								members.length -
+								members?.length -
 									1 &&
 							'rounded-bl-md'
 						}`}
@@ -125,31 +130,31 @@ function MembersTable({ members, setMembers, adminFlag }: Props) {
 						<TableCell
 							className={`font-medium text-center w-60 ${
 								index ==
-									members.length -
+									members?.length -
 										1 &&
 								'rounded-bl-md'
 							}`}
 						>
-							{member.user.name}
+							{member?.name}
 						</TableCell>
 						<TableCell className="text-center w-60">
-							{member.stack}
+							{member?.stack}
 						</TableCell>
 						<TableCell className="text-center w-60">
-							{member.perHour}
+							{member?.valueHr}
 						</TableCell>
 						<TableCell className="text-center w-60">
-							{member.value}
+							{member?.finalValue}
 						</TableCell>
 						<TableCell
 							className={`text-center  w-60 ${
 								index ==
-									members.length -
+									members?.length -
 										1 &&
 								'rounded-br-md'
 							}`}
 						>
-							{member.terms}
+							{member?.terms}
 						</TableCell>
 						{adminFlag && (
 							<TableCell className="text-center bg-white ">
@@ -281,8 +286,8 @@ function ServicesTable({ services, setServices, adminFlag }: Props) {
 				{
 					name,
 					initialValue,
-					discout,
-					value,
+					discount: discout,
+					finalValue: value,
 				},
 			]);
 		}
@@ -293,8 +298,8 @@ function ServicesTable({ services, setServices, adminFlag }: Props) {
 		setNewService({
 			name,
 			initialValue,
-			discout,
-			value,
+			discount: discout,
+			finalValue: value,
 		});
 	};
 	const removeService = (index: number) => {
@@ -318,12 +323,12 @@ function ServicesTable({ services, setServices, adminFlag }: Props) {
 
 	const sumInitialValues = (services: any[]): number => {
 		return services
-			.map((s) => {
+			?.map((s) => {
 				const sub =
-					(parseFloat(s.value) *
-						parseFloat(s.descount)) /
+					(parseFloat(s.initialValue) *
+						parseFloat(s.discount)) /
 					100;
-				return s.value - sub;
+				return s.initialValue - sub;
 			})
 			.reduce((sum, v) => {
 				return sum + v;
@@ -331,14 +336,17 @@ function ServicesTable({ services, setServices, adminFlag }: Props) {
 	};
 
 	const sumValues = (services: any[]): number => {
-		return services.reduce((sum, service) => {
-			const initialValue = parseFloat(service.value); // Convert initialValue to a number
+		return services?.reduce((sum, service) => {
+			const initialValue = parseFloat(service.initialValue); // Convert initialValue to a number
 			return sum + (isNaN(initialValue) ? 0 : initialValue); // Add to sum, default to 0 if invalid
 		}, 0); // Start with an initial sum of 0
 	};
 
 	const getFinalValue = (service: any): number => {
-		return service.value - (service.value * service.descount) / 100;
+		return (
+			service.initialValue -
+			(service.finalValue * service.discount) / 100
+		);
 	};
 
 	const calculateTotalDiscountPercentage = (services: any[]): number => {
@@ -350,6 +358,18 @@ function ServicesTable({ services, setServices, adminFlag }: Props) {
 		}
 
 		return 100 - (100 * totalInitialValues) / totalValues; // Calculate the total discount percentage
+	};
+	const sumDiscountAmounts = (services: any[]): number => {
+		return services?.reduce((sum, service) => {
+			const initialValue = parseFloat(service.initialValue); // Convert initialValue to a number
+			const discountPercentage = parseFloat(service.discount); // Convert discount to a number
+			if (isNaN(initialValue) || isNaN(discountPercentage)) {
+				return sum; // Skip invalid values
+			}
+			const discountAmount =
+				initialValue * (discountPercentage / 100); // Calculate discount amount
+			return sum + discountAmount; // Add to total discount amount
+		}, 0); // Start with an initial sum of 0
 	};
 	return (
 		<Table className="rounded-md ">
@@ -382,7 +402,7 @@ function ServicesTable({ services, setServices, adminFlag }: Props) {
 			</TableHeader>
 
 			<TableBody className="bg-[#3434341A] w-full">
-				{services.map((service, index) => (
+				{services?.map((service, index) => (
 					<TableRow
 						key={index}
 						className="border-b-transparent w-full"
@@ -391,10 +411,10 @@ function ServicesTable({ services, setServices, adminFlag }: Props) {
 							{service.name}
 						</TableCell>
 						<TableCell className="text-center w-60 ">
-							R${service.value}
+							R${service.initialValue}
 						</TableCell>
 						<TableCell className="text-center w-60 ">
-							{service.descount}%
+							{service.discount}%
 						</TableCell>
 						<TableCell className="text-center w-60 ">
 							R$
@@ -503,22 +523,20 @@ function ServicesTable({ services, setServices, adminFlag }: Props) {
 				)}
 				<TableRow className="">
 					<TableCell className="font-medium rounded-bl-md w-62 text-center ">
-						{services.length}
+						{services?.length}
 					</TableCell>
 					<TableCell className=" w-62 text-center">
 						<p className="text-red-700">
 							R$
-							{sumInitialValues(
-								services,
-							)}
+							{sumValues(services)}
 						</p>
 					</TableCell>
 					<TableCell className=" w-62 text-center">
 						<p className="text-yellow-500">
-							{calculateTotalDiscountPercentage(
+							{sumDiscountAmounts(
 								services,
 							)
-								.toString()
+								?.toString()
 								.substring(
 									0,
 									6,
@@ -529,9 +547,14 @@ function ServicesTable({ services, setServices, adminFlag }: Props) {
 					<TableCell className="rounded-br-md w-62 text-center">
 						<p className="text-green-500">
 							R$
-							{sumValues(
-								services,
-							).toString()}
+							{calculateFinalValue(
+								sumValues(
+									services,
+								)?.toString(),
+								sumDiscountAmounts(
+									services,
+								)?.toString(),
+							)?.toString()}
 						</p>
 					</TableCell>
 					{adminFlag && (
@@ -543,7 +566,7 @@ function ServicesTable({ services, setServices, adminFlag }: Props) {
 	);
 }
 
-export const ClauseComponent = ({ clause }: { clause: ClauseTemplate }) => {
+export const ClauseComponent = ({ clause }: { clause: any }) => {
 	const [clauseTitle, setClauseTitle] = useState<string>(clause.title);
 	const [clauseBody, setClauseBody] = useState<string>(clause.body);
 	function safeReplacePlaceholders(
@@ -558,12 +581,12 @@ export const ClauseComponent = ({ clause }: { clause: ClauseTemplate }) => {
 	return (
 		<div className="">
 			<h3 className="font-bold">{clauseTitle}</h3>
-			{clause.body.split(';').map((c) => (
-				<div key={c}>
-					<br />
-					<p>{c}</p>
-				</div>
-			))}
+			<div>
+				<br />
+				<p className="whitespace-pre-line">
+					{clauseBody.replace(/\\n/g, '\n')}
+				</p>
+			</div>
 		</div>
 	);
 };
@@ -586,41 +609,82 @@ export const HeadComponent = ({ head }: { head: string[] }) => {
 export function EditContractPage({ id }: { id: string }) {
 	const { openModal } = useContext(ModalContext);
 	const router = useRouter();
-	const [members, setMembers] = useState<any[]>(contractMockDone.members);
-	const [services, setServices] = useState<any[]>(
-		contractMockDone.services,
-	);
-	const updateContractHandler = async () => {
-		console.log('criar e retorna o criado e o link');
-		openModal('confirmContractCreationModal', {
-			contract: { id: '1', members, services },
-			method: 'PUT',
-		});
-	};
+	const [members, setMembers] = useState<any[]>();
+	const [services, setServices] = useState<any[]>();
 	const { isLoading, data, refetch } = useQuery({
 		queryKey: ['getClauses'],
 		queryFn: async () => {
-			return contractMock;
+			const contract = (await api.get('/contracts/' + id))
+				.data;
+
+			return contract;
 		},
 	});
+	const project = {
+		id: data?.project?.id,
+		teams: [{ projectId: data?.project?.id, members }],
+		services: services,
+	};
+	const updateContractHandler = async () => {
+		await Promise.all(
+			data?.project?.teams.map((t: any) =>
+				api.delete('/projects/teams/' + t.id),
+			) || [],
+		);
+		const projId = data?.project.id;
+		await api.delete('/services/' + projId);
+		members?.forEach((m: any) => {
+			delete m.id;
+			delete m.teamId;
+		});
+		await api.post('/projects/teams', {
+			projectId: projId,
+			members,
+		});
+		const servicesWithProjectId = (services as any[]).map(
+			(service) => ({
+				...service,
+				projectId: projId,
+			}),
+		);
+		servicesWithProjectId.forEach((s: any) => delete s.id);
+		await api.post('/services/multi', servicesWithProjectId);
+
+		openModal('confirmContractCreationModal', {
+			id: data?.id,
+			method: 'PUT',
+		});
+	};
+
+	useEffect(() => {
+		if (data?.project?.teams) {
+			const allMembers = data.project.teams.flatMap(
+				(team: any) => team.members,
+			);
+			setMembers(allMembers);
+		}
+		if (data?.project?.services) {
+			setServices(data.project.services);
+		}
+	}, [data]);
 	if (isLoading) return 'Carregando...';
 	return (
-		<div className="flex flex-col items-center justify-center gap-y-16">
+		<div className="flex flex-col items-center justify-center gap-y-16 pb-4">
 			<div className="space-y-8">
 				<MembersTable
 					adminFlag
-					services={services}
-					setServices={setServices}
-					members={members}
-					setMembers={setMembers}
+					services={services as any}
+					setServices={setServices as any}
+					members={members as any}
+					setMembers={setMembers as any}
 				/>
 
 				<ServicesTable
 					adminFlag
-					services={services}
-					setServices={setServices}
-					members={members}
-					setMembers={setMembers}
+					services={services as any}
+					setServices={setServices as any}
+					members={members as any}
+					setMembers={setMembers as any}
 				/>
 			</div>
 			<div className=" w-full">
@@ -628,16 +692,14 @@ export function EditContractPage({ id }: { id: string }) {
 					<div>
 						<Separator />
 						<HeadComponent
-							head={(
-								contractMockDone as ContractTemplate
-							).head.split(';')}
+							head={data?.header?.content.split(
+								'\n',
+							)}
 						/>
 						<Separator />
 					</div>
 					<div>
-						{(
-							contractMockDone as ContractTemplate
-						).clauses.map(
+						{data?.clauses?.map(
 							(
 								c: ClauseTemplate,
 								index: number,
@@ -656,29 +718,38 @@ export function EditContractPage({ id }: { id: string }) {
 					</div>
 				</div>
 			</div>
+			<Button onClick={() => updateContractHandler()}>
+				FINALIZAR EDIÇÃO
+			</Button>
 		</div>
 	);
 }
 export function ViewContractPage({ id }: { id: string }) {
 	const { openModal } = useContext(ModalContext);
 	const router = useRouter();
-	const [members, setMembers] = useState<any[]>(contractMockDone.members);
-	const [services, setServices] = useState<any[]>(
-		contractMockDone.services,
-	);
-	const updateContractHandler = async () => {
-		console.log('criar e retorna o criado e o link');
-		openModal('confirmContractCreationModal', {
-			contract: { id: '1', members, services },
-			method: 'PUT',
-		});
-	};
+	const [members, setMembers] = useState<any[]>();
+	const [services, setServices] = useState<any[]>();
 	const { isLoading, data, refetch } = useQuery({
 		queryKey: ['getClauses'],
 		queryFn: async () => {
-			return contractMock;
+			const contract = (await api.get('/contracts/' + id))
+				.data;
+
+			return contract;
 		},
 	});
+	useEffect(() => {
+		if (data?.project?.teams) {
+			const allMembers = data.project.teams.flatMap(
+				(team: any) => team.members,
+			);
+			setMembers(allMembers);
+		}
+		if (data?.project?.services) {
+			setServices(data.project.services);
+		}
+	}, [data]);
+
 	const sign = () => {
 		router.push(id + '/sign-contract');
 	};
@@ -690,20 +761,20 @@ export function ViewContractPage({ id }: { id: string }) {
 		<div className="flex flex-col items-center justify-center gap-y-16">
 			<div className=" w-full">
 				<h1 className="font-bold text-4xl justify-self-center">
-					{contractMockDone?.name}
+					{data?.project.name}
 				</h1>
 				<div>
 					<div className="flex flex-col pb-8">
 						<HeadComponent
-							head={(
-								contractMockDone as ContractTemplate
-							).head.split(';')}
+							head={data.header.content.split(
+								'\n',
+							)}
 						/>
 					</div>
 					<div className="flex flex-col gap-y-4">
-						{contractMockDone.clauses.map(
+						{data?.clauses.map(
 							(
-								c: ClauseTemplate,
+								c: any,
 								index: number,
 							) => (
 								<div
@@ -727,17 +798,17 @@ export function ViewContractPage({ id }: { id: string }) {
 			<div className="space-y-8">
 				<MembersTable
 					adminFlag={false}
-					services={services}
-					setServices={setServices}
-					members={members}
-					setMembers={setMembers}
+					services={services as any[]}
+					setServices={setServices as any}
+					members={members as any[]}
+					setMembers={setMembers as any}
 				/>
 				<ServicesTable
 					adminFlag={false}
-					services={services}
-					setServices={setServices}
-					members={members}
-					setMembers={setMembers}
+					services={services as any[]}
+					setServices={setServices as any}
+					members={members as any[]}
+					setMembers={setMembers as any}
 				/>
 			</div>
 			<div className="flex justify-center items-center gap-x-24 pb-24">
