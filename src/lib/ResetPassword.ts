@@ -3,7 +3,6 @@ import { api, apiPublic } from '@/services/api';
 
 export async function sendCode(email: string) {
 	try {
-		c;
 		const response = await apiPublic('/send-code', {
 			method: 'POST',
 			data: { email },
