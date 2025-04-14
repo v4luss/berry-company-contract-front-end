@@ -17,6 +17,7 @@ export default function SignUpPage() {
 	const emailRef = useRef<HTMLInputElement>(null);
 	const passwordRef = useRef<HTMLInputElement>(null);
 	const passwordConfirmRef = useRef<HTMLInputElement>(null);
+	const [error, setError] = useState<string | undefined>();
 	const registerHandler = async () => {
 		if (
 			emailRef?.current?.value &&
@@ -95,7 +96,29 @@ export default function SignUpPage() {
 						ref={emailRef}
 						type="regular"
 						placeholder="Email"
+						className="w-96"
+						onChange={(e) => {
+							if (
+								e.target.value.includes(
+									'@',
+								) &&
+								e.target.value.includes(
+									'.com',
+								)
+							) {
+								setError(
+									undefined,
+								);
+							} else {
+								setError(
+									'Email invalido.',
+								);
+							}
+						}}
 					/>
+					<span className="text-red-500">
+						{error}
+					</span>
 					<InputCustom
 						ref={passwordRef}
 						type="regular-password-eye"

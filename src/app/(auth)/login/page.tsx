@@ -20,7 +20,7 @@ export default function LoginPage() {
 	const [backendUrl, setBackendUrl] = useState<string>('');
 	const [prov, setProv] = useState<string | undefined>();
 	const { openModal } = useContext(ModalContext);
-
+	const [error, setError] = useState<string | undefined>();
 	const loginHandler = async () => {
 		router.push('/home');
 		if (emailRef?.current?.value && passwordRef.current?.value)
@@ -110,7 +110,28 @@ export default function LoginPage() {
 						type="regular"
 						placeholder="Email"
 						className="w-96"
+						onChange={(e) => {
+							if (
+								e.target.value.includes(
+									'@',
+								) &&
+								e.target.value.includes(
+									'.com',
+								)
+							) {
+								setError(
+									undefined,
+								);
+							} else {
+								setError(
+									'Email invalido.',
+								);
+							}
+						}}
 					/>
+					<span className="text-red-500">
+						{error}
+					</span>
 					<InputCustom
 						ref={passwordRef}
 						type="regular-password-eye"
